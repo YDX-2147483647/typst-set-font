@@ -30,7 +30,7 @@ export function App() {
 function FontSample(props: { font: FontName; text: string }) {
   return (
     <div
-      class="rounded bg-slate-50 px-4 py-1 text-center shadow"
+      class="rounded bg-slate-50 px-4 py-1 text-center shadow dark:bg-slate-800"
       // Note: It is hard to `set text(fallback: false)` in Web. The result is not really predictable.
       style={{ fontFamily: props.font }}
     >

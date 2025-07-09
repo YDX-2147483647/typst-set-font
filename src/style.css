@@ -6,11 +6,13 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color: #222;
-  background-color: #ffffff;
+  --tw-prose-body: #222;
   @media (prefers-color-scheme: dark) {
-    color: #ccc;
-    background-color: #1a1a1a;
+    &,
+    & .prose {
+      --tw-prose-headings: #ccc;
+      --tw-prose-body: #ccc;
+    }
   }
 
   font-synthesis: none;
