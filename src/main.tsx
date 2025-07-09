@@ -1,10 +1,7 @@
 import { hydrate, prerender as ssr } from "preact-iso";
 
+import { App } from "./app.tsx";
 import "./style.css";
-
-export function App() {
-  return <section></section>;
-}
 
 if (typeof window !== "undefined") {
   hydrate(<App />, document.getElementById("app"));
