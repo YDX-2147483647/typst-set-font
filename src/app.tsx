@@ -4,7 +4,7 @@ import {
   type FontFamilies,
   FontFamilies_from,
   type FontName,
-} from "./font_set.ts";
+} from "./fonts/types.ts";
 
 export function App() {
   const [font, setFont] = useState("Source Han Serif");

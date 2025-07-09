@@ -5,6 +5,41 @@
 export type FontName = string;
 
 /**
+ * The rule for font fallback.
+ *
+ * Some punctuations share the same codepoints for Latin and Han.
+ * When choosing the font for these shared punctuations, different rules may vary.
+ */
+export enum FallbackRule {
+  /**
+   * Use the latin font for shared punctuations.
+   *
+   * Example: `("Arial", "SimSun")` in typst.
+   * */
+  LatinFirst,
+  /**
+   * Use the Han font for shared punctuations.
+   *
+   * Example: `((name: "Arial", covers: "latin-in-cjk"), "SimSun")` in typst.
+   */
+  HanFirst,
+  /**
+   * The text mainly consists of Latin paragraphs, interspersed with some Chinese ideograph.
+   * Therefore, shared punctuations should be rendered in the Latin font,
+   * and the result of other Han punctuations does not matter.
+   *
+   * Nevertheless, this rule may cause punctuation marks to become tofus,
+   * even if they are available in system fonts.
+   * https://github.com/typst/typst/issues/6566
+   *
+   * Example: `((name: "SimSun", covers: regex("\\p{Han}")), "Arial")` in typst.
+   * Example: show-set Latin font, and show-regex-set Han font.
+   */
+  HanOnlyIdeographs,
+}
+const FallbackRule_default = FallbackRule.HanFirst;
+
+/**
  * A collection of font families used for shaping a text.
  *
  * Roughly a single `#set text(font: …))` in typst,
@@ -16,6 +51,8 @@ export interface FontFamilies {
   latin: FontName;
   /** Han characters */
   han: FontName;
+  /** Fallback rule, only relevant when `this.latin ≠ this.han` */
+  rule: FallbackRule;
 }
 export interface MathFontFamilies extends FontFamilies {
   /** A font with OpenType math features */
@@ -24,7 +61,7 @@ export interface MathFontFamilies extends FontFamilies {
 
 /** Create a `FontFamilies` from a single `font`. */
 export function FontFamilies_from(font: string): FontFamilies {
-  return { latin: font, han: font };
+  return { latin: font, han: font, rule: FallbackRule_default };
 }
 /** The default `FontFamilies` in typst. */
 export function FontFamilies_default(): FontFamilies {
@@ -32,10 +69,14 @@ export function FontFamilies_default(): FontFamilies {
   return FontFamilies_from("Libertinus Serif");
 }
 /** The default `MathFontFamilies` in typst. */
-export function MathFontFamilies_default(): MathFontFamilies {
+export function MathFontFamilies_default({
+  font,
+}: {
+  font?: FontFamilies;
+} = {}): MathFontFamilies {
   // https://docs.rs/typst-library/0.13.1/src/typst_library/math/equation.rs.html#198
-  const font = "New Computer Modern Math";
-  return { ...FontFamilies_from(font), math: font };
+  const math = "New Computer Modern Math";
+  return { ...(font ?? FontFamilies_from(math)), math };
 }
 
 /**
