@@ -1,5 +1,5 @@
-import preact from "@preact/preset-vite";
 import tailwindcss from "@tailwindcss/vite";
+import vue from "@vitejs/plugin-vue";
 import postcssNesting from "postcss-nesting";
 import { defineConfig } from "vite";
 
@@ -10,13 +10,5 @@ export default defineConfig({
       plugins: [postcssNesting()],
     },
   },
-  plugins: [
-    tailwindcss(),
-    preact({
-      prerender: {
-        enabled: true,
-        renderTarget: "#app",
-      },
-    }),
-  ],
+  plugins: [tailwindcss(), vue()],
 });

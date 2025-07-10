@@ -34,5 +34,29 @@
         "organizeImports": "on"
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      // https://biomejs.dev/internals/language-support/#html-super-languages-support
+      "includes": ["**/*.vue"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useConst": "off",
+            "useImportType": "off"
+          },
+          "correctness": {
+            "noUnusedVariables": "off",
+            "noUnusedImports": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/shims-vue.d.ts"],
+      "linter": {
+        "enabled": false
+      }
+    }
+  ]
 }

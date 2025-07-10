@@ -5,16 +5,7 @@
     "lib": ["es2021"],
     "moduleResolution": "bundler",
     "noEmit": true,
-    "allowImportingTsExtensions": true,
-
-    /* Preact Config */
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact",
-    "skipLibCheck": true,
-    "paths": {
-      "react": ["./node_modules/preact/compat/"],
-      "react-dom": ["./node_modules/preact/compat/"]
-    }
+    "allowImportingTsExtensions": true
   },
   "include": ["node_modules/vite/client.d.ts", "**/*"]
 }
