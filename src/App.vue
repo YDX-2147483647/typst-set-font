@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import {
   darkTheme,
+  NCard,
   NConfigProvider,
-  NForm,
   NFormItem,
   NH1,
   NH2,
   NInput,
-  NSelect,
+  NRadioButton,
+  NRadioGroup,
 } from "naive-ui";
-import { computed, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import FontFamiliesSample from "./components/FontFamiliesSample.vue";
-import { FallbackRule, FontSet_default } from "./fonts/types.ts";
 import { stringify_FontSet } from "./fonts/as_typst.ts";
+import { FallbackRule, FontSet_default } from "./fonts/types.ts";
 
 const themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 const theme = ref<typeof darkTheme | null>(
@@ -22,50 +23,174 @@ themeQuery.addEventListener("change", () => {
   theme.value = themeQuery.matches ? darkTheme : null;
 });
 
-const font = ref(FontSet_default());
+const font = reactive(FontSet_default());
 
-const rule_options = [
-  {
-    label: "中文字体",
-    value: FallbackRule.HanFirst,
+function build_validator(
+  fn: () => {
+    status: "success" | "warning" | "error" | "irrelevant";
+    feedback?: string;
   },
-  {
-    label: "Latin 字体",
-    value: FallbackRule.LatinFirst,
+): {
+  status: "success" | "warning" | "error";
+  disabled: boolean;
+  feedback?: string;
+} {
+  const { status, feedback } = fn();
+  return {
+    status: status === "irrelevant" ? "success" : status,
+    disabled: status === "irrelevant",
+    feedback,
+  };
+}
+
+const config = computed<
+  Record<
+    string,
+    {
+      label: string;
+      data: Record<
+        string,
+        {
+          label: string;
+          options?: { label: string; key: string | number }[];
+          validate?: ReturnType<typeof build_validator>;
+        }
+      >;
+    }
+  >
+>(() => ({
+  text: {
+    label: "正文",
+    data: {
+      latin: { label: "Latin 字体" },
+      han: { label: "中文字体" },
+      rule: {
+        label: "中西共用标点",
+        options: [
+          {
+            label: "中文字体",
+            key: FallbackRule.HanFirst,
+          },
+          {
+            label: "Latin 字体",
+            key: FallbackRule.LatinFirst,
+          },
+          {
+            label: "正文无中文标点",
+            key: FallbackRule.HanOnlyIdeographs,
+          },
+        ],
+        validate: build_validator(() => {
+          const f = font.text;
+          if (f.han === f.latin) {
+            return { status: "irrelevant", feedback: "中西字体统一，无需设置" };
+          }
+          switch (f.rule) {
+            case FallbackRule.HanFirst:
+              return { status: "success" };
+            case FallbackRule.LatinFirst:
+              return {
+                status: "warning",
+                feedback:
+                  "不建议，可选中文字体，并利用 smartquote 输入 Latin 标点",
+              };
+            case FallbackRule.HanOnlyIdeographs:
+              return {
+                status: "warning",
+                feedback: "可能导致逗号等中文独占标点变成□，建议改选“中文字体”",
+              };
+          }
+        }),
+      },
+    },
   },
-  {
-    label: "正文无中文标点",
-    value: FallbackRule.HanOnlyIdeographs,
+  code: {
+    label: "代码",
+    data: {
+      latin: { label: "Latin 字体" },
+      han: { label: "中文字体" },
+      rule: {
+        label: "中西共用标点",
+        options: [
+          {
+            label: "中文字体",
+            key: FallbackRule.HanFirst,
+          },
+          {
+            label: "Latin 字体",
+            key: FallbackRule.LatinFirst,
+          },
+          {
+            label: "代码无中文标点",
+            key: FallbackRule.HanOnlyIdeographs,
+          },
+        ],
+        validate: build_validator(() => {
+          const f = font.code;
+          if (f.han === f.latin) {
+            return { status: "irrelevant", feedback: "中西字体统一，无需设置" };
+          }
+          switch (f.rule) {
+            case FallbackRule.HanFirst:
+              return { status: "success" };
+            case FallbackRule.LatinFirst:
+              return { status: "success" };
+
+            case FallbackRule.HanOnlyIdeographs:
+              return {
+                status: "warning",
+                feedback: "可能导致逗号等中文独占标点变成□，建议改选“中文字体”",
+              };
+          }
+        }),
+      },
+    },
   },
-];
-const rule_validation = computed(() => {
-  if (font.value.text.han === font.value.text.latin) {
-    return "success";
-  }
-  switch (font.value.text.rule) {
-    case FallbackRule.HanFirst:
-      return "success";
-    case FallbackRule.LatinFirst:
-      return "warning";
-    case FallbackRule.HanOnlyIdeographs:
-      return "warning";
-  }
-});
-// TODO
-const feedback = computed(() => {
-  if (font.value.text.han === font.value.text.latin) {
-    return "中西字体统一，无需设置";
-  }
-  switch (font.value.text.rule) {
-    case FallbackRule.HanFirst:
-      return;
-    case FallbackRule.LatinFirst:
-      // TODO
-      return "不建议，可选中文字体，并利用 smartquote 输入 Latin";
-    case FallbackRule.HanOnlyIdeographs:
-      return "warning";
-  }
-});
+  math: {
+    label: "数学",
+    data: {
+      math: { label: "数学排版" },
+      latin: { label: "Latin 字体" },
+      han: { label: "中文字体" },
+      rule: {
+        label: "中西共用标点",
+        options: [
+          {
+            label: "中文字体",
+            key: FallbackRule.HanFirst,
+          },
+          {
+            label: "Latin 字体",
+            key: FallbackRule.LatinFirst,
+          },
+          {
+            label: "数学公式无中文标点",
+            key: FallbackRule.HanOnlyIdeographs,
+          },
+        ],
+        validate: build_validator(() => {
+          const f = font.math;
+          if (f.han === f.latin) {
+            return { status: "irrelevant", feedback: "中西字体统一，无需设置" };
+          }
+          switch (f.rule) {
+            case FallbackRule.HanFirst:
+              return { status: "success" };
+            case FallbackRule.LatinFirst:
+              return { status: "success" };
+
+            case FallbackRule.HanOnlyIdeographs:
+              return {
+                status: "warning",
+                feedback:
+                  "可能导致逗号、括号等中文独占标点变成□，建议改选“Latin 字体”",
+              };
+          }
+        }),
+      },
+    },
+  },
+}));
 </script>
 
 <template>
@@ -76,111 +201,47 @@ const feedback = computed(() => {
         <section class="prose">
           <n-h2>基础字体设置</n-h2>
           <p>保证全文字体都基本正常，不会随机回落或出现豆腐块。</p>
-          <n-form
-            class="not-prose grid grid-cols-[auto_1fr] gap-x-3 lg:grid-cols-[auto_1fr_1fr_auto] lg:gap-y-3"
+          <n-card
+            v-for="(category, category_key) in config"
+            :title="category.label"
+            class="my-3"
           >
-            <p
-              class="row-span-3 pt-7 text-end font-bold lg:row-span-1 lg:content-center lg:pt-0"
-            >
-              正文
-            </p>
-            <n-form-item label="Latin">
-              <n-input v-model:value="font.text.latin" type="text" />
-            </n-form-item>
-            <n-form-item label="中文">
-              <n-input v-model:value="font.text.han" type="text" />
-            </n-form-item>
             <n-form-item
-              label="中西共用标点"
-              :validation-status="rule_validation"
-              :feedback="font.text.latin === font.text.han ? '无需设置' : null"
-            >
-              <n-select
-                v-model:value="font.text.rule"
-                :disabled="font.text.latin === font.text.han"
-                :options="rule_options"
-              />
-            </n-form-item>
-
-            <p
-              class="row-span-3 mt-3 pt-7 text-end font-bold lg:row-span-1 lg:mt-0 lg:content-center lg:pt-0"
-            >
-              代码
-            </p>
-            <n-form-item class="mt-3 lg:mt-0" label="Latin">
-              <n-input v-model:value="font.code.latin" type="text" />
-            </n-form-item>
-            <n-form-item label="中文">
-              <n-input v-model:value="font.code.han" type="text" />
-            </n-form-item>
-            <n-form-item
-              label="中西共用标点"
-              :validation-status="
-                font.code.latin !== font.code.han &&
-                font.code.rule === FallbackRule.HanOnlyIdeographs
-                  ? 'warning'
-                  : 'success'
-              "
-              :feedback="font.code.latin === font.code.han ? '无需设置' : null"
-            >
-              <n-select
-                v-model:value="font.code.rule"
-                :disabled="font.code.latin === font.code.han"
-                :options="rule_options"
-              />
-            </n-form-item>
-
-            <p
-              class="row-span-4 mt-3 pt-7 text-end font-bold lg:row-span-2 lg:mt-0 lg:content-center lg:pt-0"
-            >
-              数学
-            </p>
-            <n-form-item
-              class="mt-3 lg:mt-0"
-              label="Latin"
-              :validation-status="
-                font.math.latin === font.math.math &&
-                font.math.latin !== font.math.han
-                  ? 'error'
-                  : 'success'
-              "
-            >
-              <n-input v-model:value="font.math.latin" type="text" />
-            </n-form-item>
-            <n-form-item label="中文">
-              <n-input v-model:value="font.math.han" type="text" />
-            </n-form-item>
-            <n-form-item
-              label="中西共用标点"
-              :validation-status="
-                font.math.latin !== font.math.han &&
-                font.math.rule === FallbackRule.HanOnlyIdeographs
-                  ? 'warning'
-                  : 'success'
-              "
-              :feedback="font.math.latin === font.math.han ? '无需设置' : null"
-            >
-              <n-select
-                v-model:value="font.math.rule"
-                :disabled="font.math.latin === font.math.han"
-                :options="rule_options"
-              />
-            </n-form-item>
-            <n-form-item
-              class="mt-3 lg:col-span-2 lg:mt-0"
-              label="数学排版"
+              v-for="(it, key) in category.data"
+              :key="key"
+              :label="it.label"
               label-placement="left"
+              label-width="7em"
+              :validation-status="it.validate?.status"
+              :feedback="it.validate?.feedback"
             >
-              <n-input v-model:value="font.math.math" type="text" />
+              <n-radio-group
+                v-if="it.options"
+                v-model:value="font[category_key][key]"
+                :disabled="it.validate?.disabled"
+              >
+                <n-radio-button
+                  v-for="{ key, label } in it.options"
+                  :key="key"
+                  :value="key"
+                  :label="label"
+                />
+              </n-radio-group>
+              <n-input
+                v-else
+                v-model:value="font[category_key][key]"
+                :disabled="it.validate?.disabled"
+                type="text"
+              />
             </n-form-item>
-          </n-form>
+          </n-card>
         </section>
         <aside>
           <FontFamiliesSample :font="font.text" />
           <n-h2>Typst 代码</n-h2>
           <pre
             class="prose"
-          ><code>{{ stringify_FontSet(font, { mode: "markup" }) }}</code></pre>
+          ><code class="block overflow-x-auto max-w-4xs">{{ stringify_FontSet(font, { mode: "markup" }) }}</code></pre>
         </aside>
       </div>
     </main>
