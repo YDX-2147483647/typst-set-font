@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import {
-  darkTheme,
   NCard,
-  NConfigProvider,
   NFormItem,
   NH1,
   NH2,
@@ -20,14 +18,6 @@ import {
   FontSet,
   FontSet_empty,
 } from "./fonts/types.ts";
-
-const themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-const theme = ref<typeof darkTheme | null>(
-  themeQuery.matches ? darkTheme : null,
-);
-themeQuery.addEventListener("change", () => {
-  theme.value = themeQuery.matches ? darkTheme : null;
-});
 
 const font = reactive(FontSet_empty());
 
@@ -240,79 +230,77 @@ const sample_category = ref<keyof FontSet>("text");
 </script>
 
 <template>
-  <n-config-provider :theme="theme">
-    <main>
-      <n-h1>Typst set font</n-h1>
-      <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
-        <section class="prose">
-          <n-h2>基础字体设置</n-h2>
-          <p>保证全文字体都基本正常，不会随机回落或出现豆腐块。</p>
-          <n-card
-            v-for="(category, category_key) in config"
-            v-bind:key="category_key"
-            :title="category.label"
-            class="my-3"
-            @input="sample_category = category_key"
+  <main>
+    <n-h1>Typst set font</n-h1>
+    <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
+      <section class="prose">
+        <n-h2>基础字体设置</n-h2>
+        <p>保证全文字体都基本正常，不会随机回落或出现豆腐块。</p>
+        <n-card
+          v-for="(category, category_key) in config"
+          v-bind:key="category_key"
+          :title="category.label"
+          class="my-3"
+          @input="sample_category = category_key"
+        >
+          <p v-if="category.description" class="mt-0">
+            {{ category.description }}
+          </p>
+          <n-form-item
+            v-for="(it, key) in category.data"
+            :key="key"
+            :label="it.label"
+            label-placement="left"
+            label-width="7em"
+            :validation-status="it.validate?.status"
+            :feedback="it.validate?.feedback"
           >
-            <p v-if="category.description" class="mt-0">
-              {{ category.description }}
-            </p>
-            <n-form-item
-              v-for="(it, key) in category.data"
-              :key="key"
-              :label="it.label"
-              label-placement="left"
-              label-width="7em"
-              :validation-status="it.validate?.status"
-              :feedback="it.validate?.feedback"
+            <n-radio-group
+              v-if="it.options"
+              v-model:value="font[category_key][key]"
+              :disabled="it.validate?.disabled"
             >
-              <n-radio-group
-                v-if="it.options"
-                v-model:value="font[category_key][key]"
-                :disabled="it.validate?.disabled"
-              >
-                <n-radio-button
-                  v-for="{ key, label } in it.options"
-                  :key="key"
-                  :value="key"
-                  :label="label"
-                />
-              </n-radio-group>
-              <n-input
-                v-else
-                v-model:value="font[category_key][key]"
-                :disabled="it.validate?.disabled"
-                :clearable="true"
-                type="text"
+              <n-radio-button
+                v-for="{ key, label } in it.options"
+                :key="key"
+                :value="key"
+                :label="label"
               />
-            </n-form-item>
-          </n-card>
-        </section>
-        <aside class="prose">
-          <div class="sticky top-2">
-            <section>
-              <n-h2>字体测试</n-h2>
-              <n-radio-group v-model:value="sample_category">
-                <n-radio-button
-                  v-for="(category, category_key) in config"
-                  v-bind:key="category_key"
-                  :value="category_key"
-                  :label="category.label"
-                />
-              </n-radio-group>
-              <FontFamiliesSample
-                :font="font[sample_category]"
-                :category="sample_category"
+            </n-radio-group>
+            <n-input
+              v-else
+              v-model:value="font[category_key][key]"
+              :disabled="it.validate?.disabled"
+              :clearable="true"
+              type="text"
+            />
+          </n-form-item>
+        </n-card>
+      </section>
+      <aside class="prose">
+        <div class="sticky top-2">
+          <section>
+            <n-h2>字体测试</n-h2>
+            <n-radio-group v-model:value="sample_category">
+              <n-radio-button
+                v-for="(category, category_key) in config"
+                v-bind:key="category_key"
+                :value="category_key"
+                :label="category.label"
               />
-              <p>浏览器渲染效果可能与 typst 不同；请以文字描述为准。</p>
-            </section>
-            <section>
-              <n-h2>Typst 代码</n-h2>
-              <pre><code class="block overflow-x-auto max-w-4xs">{{ stringify_FontSet(resolve_FontSet(font), { mode: "markup" }) || "\n" }}</code></pre>
-            </section>
-          </div>
-        </aside>
-      </div>
-    </main>
-  </n-config-provider>
+            </n-radio-group>
+            <FontFamiliesSample
+              :font="font[sample_category]"
+              :category="sample_category"
+            />
+            <p>浏览器渲染效果可能与 typst 不同；请以文字描述为准。</p>
+          </section>
+          <section>
+            <n-h2>Typst 代码</n-h2>
+            <pre><code class="block overflow-x-auto max-w-4xs">{{ stringify_FontSet(resolve_FontSet(font), { mode: "markup" }) || "\n" }}</code></pre>
+          </section>
+        </div>
+      </aside>
+    </div>
+  </main>
 </template>
