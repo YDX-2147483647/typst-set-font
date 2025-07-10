@@ -13,7 +13,7 @@ import {
 import { computed, reactive, ref } from "vue";
 import FontFamiliesSample from "./components/FontFamiliesSample.vue";
 import { stringify_FontSet } from "./fonts/as_typst.ts";
-import { resolve_FontSet } from "./fonts/resolve.ts";
+import { resolve_FontFamilies, resolve_FontSet } from "./fonts/resolve.ts";
 import {
   FallbackRule,
   FontFamilies,
@@ -88,8 +88,8 @@ const config = computed<
           },
         ],
         validate: build_validator(() => {
-          const f = font.text;
-          if (f.han === f.latin) {
+          const f = resolve_FontFamilies(font.text, "text");
+          if (f === null || f.han === f.latin) {
             return { status: "irrelevant", feedback: "中西字体统一，无需设置" };
           }
           switch (f.rule) {
@@ -135,8 +135,8 @@ const config = computed<
           },
         ],
         validate: build_validator(() => {
-          const f = font.code;
-          if (f.han === f.latin) {
+          const f = resolve_FontFamilies(font.code, "code");
+          if (f === null || f.han === f.latin) {
             return { status: "irrelevant", feedback: "中西字体统一，无需设置" };
           }
           switch (f.rule) {
@@ -168,18 +168,22 @@ const config = computed<
         label: "Latin 字体",
 
         validate: build_validator(() => {
-          const f = font.math;
-          if (f.latin === f.math && f.latin !== f.han && f.han) {
+          const f = resolve_FontFamilies(font.math, "math");
+          if (f === null) {
+            return { status: "success" };
+          }
+
+          if (f.latin === f.math && f.latin !== f.han) {
             return {
               status: "warning",
               // TODO: Render markdown
               feedback:
-                "可能遇到 typst#6566，建议“Math”后缀只给数学排版字体加，而不给 Latin 字体加",
+                "可能遇到 typst#6566，建议数学排版字体加“Math”后缀，而 Latin 字体不加",
             };
           }
           if (
             f.latin !== f.math &&
-            f.latin?.toLocaleLowerCase().includes(" Math".toLocaleLowerCase())
+            f.latin.toLocaleLowerCase().includes(" Math".toLocaleLowerCase())
           ) {
             // https://forum.typst.app/t/what-is-the-designed-behaviour-of-font-covers-in-math-equations/5006
             return {
@@ -209,8 +213,8 @@ const config = computed<
           },
         ],
         validate: build_validator(() => {
-          const f = font.math;
-          if (f.han === f.latin) {
+          const f = resolve_FontFamilies(font.math, "math");
+          if (f === null || f.han === f.latin) {
             return { status: "irrelevant", feedback: "中西字体统一，无需设置" };
           }
           switch (f.rule) {
