@@ -12,6 +12,7 @@ import {
 import { computed, ref } from "vue";
 import FontFamiliesSample from "./components/FontFamiliesSample.vue";
 import { FallbackRule, FontSet_default } from "./fonts/types.ts";
+import { stringify_FontSet } from "./fonts/as_typst.ts";
 
 const themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 const theme = ref<typeof darkTheme | null>(
@@ -114,7 +115,12 @@ const feedback = computed(() => {
             </n-form-item>
             <n-form-item
               label="中西共用标点"
-              :validation-status="rule_validation"
+              :validation-status="
+                font.code.latin !== font.code.han &&
+                font.code.rule === FallbackRule.HanOnlyIdeographs
+                  ? 'warning'
+                  : 'success'
+              "
               :feedback="font.code.latin === font.code.han ? '无需设置' : null"
             >
               <n-select
@@ -129,7 +135,16 @@ const feedback = computed(() => {
             >
               数学
             </p>
-            <n-form-item class="mt-3 lg:mt-0" label="Latin">
+            <n-form-item
+              class="mt-3 lg:mt-0"
+              label="Latin"
+              :validation-status="
+                font.math.latin === font.math.math &&
+                font.math.latin !== font.math.han
+                  ? 'error'
+                  : 'success'
+              "
+            >
               <n-input v-model:value="font.math.latin" type="text" />
             </n-form-item>
             <n-form-item label="中文">
@@ -137,8 +152,13 @@ const feedback = computed(() => {
             </n-form-item>
             <n-form-item
               label="中西共用标点"
-              :validation-status="rule_validation"
-              :feedback="font.code.latin === font.code.han ? '无需设置' : null"
+              :validation-status="
+                font.math.latin !== font.math.han &&
+                font.math.rule === FallbackRule.HanOnlyIdeographs
+                  ? 'warning'
+                  : 'success'
+              "
+              :feedback="font.math.latin === font.math.han ? '无需设置' : null"
             >
               <n-select
                 v-model:value="font.math.rule"
@@ -155,7 +175,13 @@ const feedback = computed(() => {
             </n-form-item>
           </n-form>
         </section>
-        <FontFamiliesSample :font="font.text" />
+        <aside>
+          <FontFamiliesSample :font="font.text" />
+          <n-h2>Typst 代码</n-h2>
+          <pre
+            class="prose"
+          ><code>{{ stringify_FontSet(font, { mode: "markup" }) }}</code></pre>
+        </aside>
       </div>
     </main>
   </n-config-provider>
