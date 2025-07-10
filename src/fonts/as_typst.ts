@@ -1,14 +1,15 @@
 /**
  * @module
- * Generate typst codes.
+ * Generate typst codes for resolved fonts.
  */
 
 import {
   FallbackRule,
+  FontSetResolved,
   type FontFamilies,
   type FontName,
-  type FontSet,
   type MathFontFamilies,
+  type Resolved,
 } from "./types.ts";
 
 class TypstCode {
@@ -40,14 +41,14 @@ const FallbackRule_fn = new Map<
   ],
 ]);
 
-export function stringify_FontFamilies(font: FontFamilies): string {
+export function stringify_FontFamilies(font: Resolved<FontFamilies>): string {
   const font_list =
     font.latin === font.han
       ? [font.latin]
-      : FallbackRule_fn.get(font.rule)(font);
+      : FallbackRule_fn.get(font.rule)!(font);
 
   if ("math" in font) {
-    const math = (font as MathFontFamilies).math;
+    const math = (font as Resolved<MathFontFamilies>).math;
     // Ignore if duplicated
     if (math !== font_list[font_list.length - 1]) {
       font_list.push(math);
@@ -58,20 +59,21 @@ export function stringify_FontFamilies(font: FontFamilies): string {
 }
 
 export function stringify_FontSet(
-  font: FontSet,
+  font: FontSetResolved,
   { mode }: { mode: "markup" | "code" },
 ): string {
-  const text = stringify_FontFamilies(font.text);
-  const math = stringify_FontFamilies(font.math);
-  const code = stringify_FontFamilies(font.code);
-
   // TODO: Support `FontSetAdvanced` and `FontSetPersonal`.
 
   return [
-    `set text(font: ${text})`,
-    `show math.equation: set text(font: ${math})`,
-    `show raw: set text(font: ${code})`,
+    font.text ? `set text(font: ${stringify_FontFamilies(font.text)})` : null,
+    font.math
+      ? `show math.equation: set text(font: ${stringify_FontFamilies(font.math)})`
+      : null,
+    font.code
+      ? `show raw: set text(font: ${stringify_FontFamilies(font.code)})`
+      : null,
   ]
+    .filter(Boolean)
     .map((row) => (mode === "markup" ? `#${row}` : row))
     .join("\n");
 }

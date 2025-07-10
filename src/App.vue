@@ -13,7 +13,13 @@ import {
 import { computed, reactive, ref } from "vue";
 import FontFamiliesSample from "./components/FontFamiliesSample.vue";
 import { stringify_FontSet } from "./fonts/as_typst.ts";
-import { FallbackRule, FontSet_default } from "./fonts/types.ts";
+import { resolve_FontSet } from "./fonts/resolve.ts";
+import {
+  FallbackRule,
+  FontFamilies,
+  FontSet,
+  FontSet_empty,
+} from "./fonts/types.ts";
 
 const themeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 const theme = ref<typeof darkTheme | null>(
@@ -23,7 +29,7 @@ themeQuery.addEventListener("change", () => {
   theme.value = themeQuery.matches ? darkTheme : null;
 });
 
-const font = reactive(FontSet_default());
+const font = reactive(FontSet_empty());
 
 function build_validator(
   fn: () => {
@@ -45,11 +51,12 @@ function build_validator(
 
 const config = computed<
   Record<
-    string,
+    keyof FontSet,
     {
       label: string;
+      description?: string;
       data: Record<
-        string,
+        keyof Omit<FontFamilies, "rule">,
         {
           label: string;
           options?: { label: string; key: string | number }[];
@@ -92,7 +99,7 @@ const config = computed<
               return {
                 status: "warning",
                 feedback:
-                  "不建议，可选中文字体，并利用 smartquote 输入 Latin 标点",
+                  "不建议，可选“中文字体”，并利用 smartquote 输入 Latin 标点",
               };
             case FallbackRule.HanOnlyIdeographs:
               return {
@@ -106,6 +113,8 @@ const config = computed<
   },
   code: {
     label: "代码",
+    // TODO: Render markdown
+    description: "代码指 raw。",
     data: {
       latin: { label: "Latin 字体" },
       han: { label: "中文字体" },
@@ -148,9 +157,40 @@ const config = computed<
   },
   math: {
     label: "数学",
+    // TODO: Render markdown
+    description:
+      '数学排版指 math.equation 中的变量、分式、积分号等，而中文、Latin 指用 "" 包裹起来的文本。',
     data: {
-      math: { label: "数学排版" },
-      latin: { label: "Latin 字体" },
+      math: {
+        label: "数学排版",
+      },
+      latin: {
+        label: "Latin 字体",
+
+        validate: build_validator(() => {
+          const f = font.math;
+          if (f.latin === f.math && f.latin !== f.han && f.han) {
+            return {
+              status: "warning",
+              // TODO: Render markdown
+              feedback:
+                "可能遇到 typst#6566，建议“Math”后缀只给数学排版字体加，而不给 Latin 字体加",
+            };
+          }
+          if (
+            f.latin !== f.math &&
+            f.latin?.toLocaleLowerCase().includes(" Math".toLocaleLowerCase())
+          ) {
+            // https://forum.typst.app/t/what-is-the-designed-behaviour-of-font-covers-in-math-equations/5006
+            return {
+              status: "warning",
+              feedback:
+                "选用数学字体用于文本可能会一同替换数学排版的字体，建议删除“Math”后缀或换成“Sans”或“Serif”",
+            };
+          }
+          return { status: "success" };
+        }),
+      },
       han: { label: "中文字体" },
       rule: {
         label: "中西共用标点",
@@ -191,6 +231,8 @@ const config = computed<
     },
   },
 }));
+
+const sample_category = ref<keyof FontSet>("text");
 </script>
 
 <template>
@@ -207,6 +249,9 @@ const config = computed<
             :title="category.label"
             class="my-3"
           >
+            <p v-if="category.description" class="mt-0">
+              {{ category.description }}
+            </p>
             <n-form-item
               v-for="(it, key) in category.data"
               :key="key"
@@ -232,17 +277,29 @@ const config = computed<
                 v-else
                 v-model:value="font[category_key][key]"
                 :disabled="it.validate?.disabled"
+                :clearable="true"
                 type="text"
               />
             </n-form-item>
           </n-card>
         </section>
         <aside>
-          <FontFamiliesSample :font="font.text" />
+          <n-radio-group v-model:value="sample_category">
+            <n-radio-button
+              v-for="(category, category_key) in config"
+              v-bind:key="category_key"
+              :value="category_key"
+              :label="category.label"
+            />
+          </n-radio-group>
+          <FontFamiliesSample
+            :font="font[sample_category]"
+            :category="sample_category"
+          />
           <n-h2>Typst 代码</n-h2>
           <pre
             class="prose"
-          ><code class="block overflow-x-auto max-w-4xs">{{ stringify_FontSet(font, { mode: "markup" }) }}</code></pre>
+          ><code class="block overflow-x-auto max-w-4xs">{{ stringify_FontSet(resolve_FontSet(font), { mode: "markup" }) }}</code></pre>
         </aside>
       </div>
     </main>

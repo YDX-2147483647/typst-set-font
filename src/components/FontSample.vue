@@ -13,7 +13,7 @@ defineProps<{
     <div>{{ font ?? "随机字体或豆腐块" }}</div>
     <div
       class="rounded bg-slate-50 px-4 py-1 shadow dark:bg-slate-800"
-      :style="{ fontFamily: font }"
+      :style="{ fontFamily: font ?? '' }"
     >
       {{ text }}
     </div>

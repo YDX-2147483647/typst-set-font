@@ -3,11 +3,11 @@ import { stringify_FontFamilies, stringify_FontSet } from "./as_typst.ts";
 import {
   FallbackRule,
   type FontFamilies,
-  FontFamilies_default,
   FontFamilies_from,
-  FontSet_default,
   type MathFontFamilies,
-  MathFontFamilies_default,
+  MathFontFamilies_from,
+  type Resolved,
+  TYPST_FONT,
 } from "./types.ts";
 
 describe("stringify_FontFamilies", () => {
@@ -19,7 +19,7 @@ describe("stringify_FontFamilies", () => {
     });
 
     it("should work with default font", () => {
-      const font = FontFamilies_default();
+      const font = FontFamilies_from(TYPST_FONT.text);
       const result = stringify_FontFamilies(font);
       expect(result).toBe('"Libertinus Serif"');
     });
@@ -27,7 +27,7 @@ describe("stringify_FontFamilies", () => {
 
   describe("different fonts for latin and han", () => {
     it("should generate HanFirst fallback rule", () => {
-      const font: FontFamilies = {
+      const font: Resolved<FontFamilies> = {
         latin: "Arial",
         han: "SimSun",
         rule: FallbackRule.HanFirst,
@@ -39,7 +39,7 @@ describe("stringify_FontFamilies", () => {
     });
 
     it("should generate LatinFirst fallback rule", () => {
-      const font: FontFamilies = {
+      const font: Resolved<FontFamilies> = {
         latin: "Arial",
         han: "SimSun",
         rule: FallbackRule.LatinFirst,
@@ -49,7 +49,7 @@ describe("stringify_FontFamilies", () => {
     });
 
     it("should generate HanOnlyIdeographs fallback rule", () => {
-      const font: FontFamilies = {
+      const font: Resolved<FontFamilies> = {
         latin: "Times New Roman",
         han: "SimSun",
         rule: FallbackRule.HanOnlyIdeographs,
@@ -63,7 +63,7 @@ describe("stringify_FontFamilies", () => {
 
   describe("math font families", () => {
     it("should generate math font with same latin/han font", () => {
-      const font: MathFontFamilies = {
+      const font: Resolved<MathFontFamilies> = {
         latin: "Source Han Serif",
         han: "Source Han Serif",
         rule: FallbackRule.HanFirst,
@@ -74,7 +74,7 @@ describe("stringify_FontFamilies", () => {
     });
 
     it("should generate math font with different latin/han fonts", () => {
-      const font: MathFontFamilies = {
+      const font: Resolved<MathFontFamilies> = {
         latin: "Arial",
         han: "SimSun",
         rule: FallbackRule.LatinFirst,
@@ -85,13 +85,13 @@ describe("stringify_FontFamilies", () => {
     });
 
     it("should work with default math font families", () => {
-      const font = MathFontFamilies_default();
+      const font = MathFontFamilies_from(TYPST_FONT.math);
       const result = stringify_FontFamilies(font);
       expect(result).toBe('"New Computer Modern Math"');
     });
 
     it("should generate math font with HanFirst rule", () => {
-      const font: MathFontFamilies = {
+      const font: Resolved<MathFontFamilies> = {
         latin: "Times New Roman",
         han: "SimSun",
         rule: FallbackRule.HanFirst,
@@ -104,7 +104,7 @@ describe("stringify_FontFamilies", () => {
     });
 
     it("should generate math font with HanOnlyIdeographs rule", () => {
-      const font: MathFontFamilies = {
+      const font: Resolved<MathFontFamilies> = {
         latin: "New Computer Modern",
         han: "Noto Serif CJK SC",
         rule: FallbackRule.HanOnlyIdeographs,
@@ -175,21 +175,25 @@ describe("stringify_FontSet", () => {
         han: "SimSun",
         rule: FallbackRule.LatinFirst,
       },
-      math: MathFontFamilies_default(),
+      math: MathFontFamilies_from("Fira Math"),
       code: FontFamilies_from("Fira Mono"),
     };
     const result = stringify_FontSet(fontSet, { mode: "code" });
     expect(result).toBe(
       [
         'set text(font: ("Arial", "SimSun"))',
-        'show math.equation: set text(font: "New Computer Modern Math")',
+        'show math.equation: set text(font: "Fira Math")',
         'show raw: set text(font: "Fira Mono")',
       ].join("\n"),
     );
   });
 
   it("should generate good default with default fonts", () => {
-    const fontSet = FontSet_default();
+    const fontSet = {
+      text: FontFamilies_from(TYPST_FONT.text),
+      code: FontFamilies_from(TYPST_FONT.code),
+      math: MathFontFamilies_from(TYPST_FONT.math),
+    };
     const result = stringify_FontSet(fontSet, { mode: "markup" });
     expect(result).toBe(
       [
@@ -198,5 +202,44 @@ describe("stringify_FontSet", () => {
         '#show raw: set text(font: "DejaVu Sans Mono")',
       ].join("\n"),
     );
+  });
+
+  it("should work if some elements are ignored", () => {
+    expect(
+      stringify_FontSet(
+        {
+          text: arial,
+          math: null,
+          code: arial,
+        },
+        { mode: "code" },
+      ),
+    ).toBe(
+      ['set text(font: "Arial")', 'show raw: set text(font: "Arial")'].join(
+        "\n",
+      ),
+    );
+
+    expect(
+      stringify_FontSet(
+        {
+          text: arial,
+          math: null,
+          code: null,
+        },
+        { mode: "code" },
+      ),
+    ).toBe('set text(font: "Arial")');
+
+    expect(
+      stringify_FontSet(
+        {
+          text: null,
+          math: null,
+          code: null,
+        },
+        { mode: "code" },
+      ),
+    ).toBe("");
   });
 });

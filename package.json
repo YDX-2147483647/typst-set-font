@@ -5,7 +5,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "check": "prettier --check .",
+    "check": "prettier --check . && eslint src && vitest run && tsc",
     "lint": "eslint src",
     "fmt": "prettier --write .",
     "test": "vitest"

@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { NH2 } from "naive-ui";
 import { computed } from "vue";
-import { FallbackRule, type FontFamilies } from "../fonts/types.ts";
+import { resolve_FontFamilies } from "../fonts/resolve.ts";
+import {
+  FallbackRule,
+  FontSet,
+  TYPST_FONT,
+  type FontFamilies,
+} from "../fonts/types.ts";
 import FontSample from "./FontSample.vue";
 
-const { font } = defineProps<{
+const { font, category } = defineProps<{
   font: FontFamilies;
+  category: keyof FontSet;
 }>();
 
 const sample = {
@@ -18,12 +25,21 @@ const sample = {
 };
 
 const calc_font = computed(() => {
+  const rule = font.rule;
+  const resolved = resolve_FontFamilies(font, category);
+  const typst_fallback = TYPST_FONT[category];
+
   return {
-    latin: font.latin,
-    both: font.rule === FallbackRule.HanFirst ? font.han : font.latin,
+    latin: resolved?.latin ?? typst_fallback,
+    both:
+      (rule === FallbackRule.HanFirst ? resolved?.han : resolved?.latin) ??
+      typst_fallback,
     han: {
-      punct: font.rule === FallbackRule.HanOnlyIdeographs ? null : font.han,
-      ideo: font.han,
+      punct:
+        rule === FallbackRule.HanOnlyIdeographs
+          ? null
+          : (resolved?.han ?? null),
+      ideo: resolved?.han ?? null,
     },
   };
 });

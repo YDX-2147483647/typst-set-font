@@ -39,6 +39,9 @@ export enum FallbackRule {
 }
 const FallbackRule_default = FallbackRule.HanFirst;
 
+/** Convert from `{ foo?: U | null }` to `{ foo: U }`. */
+export type Resolved<T> = { [P in keyof Required<T>]: NonNullable<T[P]> };
+
 /**
  * A collection of font families used for shaping a text.
  *
@@ -48,35 +51,32 @@ const FallbackRule_default = FallbackRule.HanFirst;
  */
 export interface FontFamilies {
   /** Latin alphabet */
-  latin: FontName;
+  latin?: FontName | null;
   /** Han characters */
-  han: FontName;
-  /** Fallback rule, only relevant when `this.latin ≠ this.han` */
+  han?: FontName | null;
+  /** Fallback rule, only relevant when the Latin and Han fonts are different and the Han font is set explicitly. */
   rule: FallbackRule;
 }
 export interface MathFontFamilies extends FontFamilies {
   /** A font with OpenType math features */
-  math: FontName;
+  math?: FontName | null;
 }
 
+export function FontFamilies_empty(): Required<FontFamilies> {
+  return { latin: null, han: null, rule: FallbackRule_default };
+}
 /** Create a `FontFamilies` from a single `font`. */
-export function FontFamilies_from(font: string): FontFamilies {
-  return { latin: font, han: font, rule: FallbackRule_default };
+export function FontFamilies_from(font: string): Resolved<FontFamilies> {
+  return { ...FontFamilies_empty(), latin: font, han: font };
 }
-/** The default `FontFamilies` in typst. */
-export function FontFamilies_default(): FontFamilies {
-  // https://docs.rs/crate/typst-library/0.13.1/source/src/text/mod.rs#166
-  return FontFamilies_from("Libertinus Serif");
+export function MathFontFamilies_empty(): Required<MathFontFamilies> {
+  return { ...FontFamilies_empty(), math: null };
 }
-/** The default `MathFontFamilies` in typst. */
-export function MathFontFamilies_default({
-  font,
-}: {
-  font?: FontFamilies;
-} = {}): MathFontFamilies {
-  // https://docs.rs/typst-library/0.13.1/src/typst_library/math/equation.rs.html#198
-  const math = "New Computer Modern Math";
-  return { ...(font ?? FontFamilies_from(math)), math };
+/** Create a `MathFontFamilies` from a single `font`. */
+export function MathFontFamilies_from(
+  font: string,
+): Resolved<MathFontFamilies> {
+  return { ...FontFamilies_from(font), math: font };
 }
 
 /**
@@ -94,16 +94,35 @@ export interface FontSet {
   /** [`raw` in typst](https://typst.app/docs/reference/text/raw/) */
   code: FontFamilies;
 }
+export interface FontSetRequired extends FontSet {
+  text: Required<FontFamilies>;
+  math: Required<MathFontFamilies>;
+  code: Required<FontFamilies>;
+}
+export interface FontSetResolved {
+  text: Resolved<FontFamilies> | null;
+  math: Resolved<MathFontFamilies> | null;
+  code: Resolved<FontFamilies> | null;
+}
 
-/** The default `FontSet` in typst. */
-export function FontSet_default(): FontSet {
+export function FontSet_empty(): FontSetRequired {
   return {
-    text: FontFamilies_default(),
-    math: MathFontFamilies_default(),
+    text: FontFamilies_empty(),
+    math: MathFontFamilies_empty(),
     // https://docs.rs/typst-library/0.13.1/src/typst_library/text/raw.rs.html#479
-    code: FontFamilies_from("DejaVu Sans Mono"),
+    code: FontFamilies_empty(),
   };
 }
+
+/** The default fallback fonts in typst. */
+export const TYPST_FONT = {
+  /** https://docs.rs/crate/typst-library/0.13.1/source/src/text/mod.rs#166 */
+  text: "Libertinus Serif",
+  /** https://docs.rs/typst-library/0.13.1/src/typst_library/math/equation.rs.html#198 */
+  math: "New Computer Modern Math",
+  /** https://docs.rs/typst-library/0.13.1/src/typst_library/text/raw.rs.html#479 */
+  code: "DejaVu Sans Mono",
+};
 
 /** [The cuti typst package](https://typst.app/universe/package/cuti) simulating (fake) bold, italic, etc. */
 export type CUTI = "@preview/cuti:0.3.0";
