@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { NH2 } from "naive-ui";
 import type { FontFamilies } from "../fonts/types.ts";
 import FontSample from "./FontSample.vue";
 
@@ -17,8 +18,8 @@ const sample = {
 </script>
 
 <template>
-  <section>
-    <h2>字体测试</h2>
+  <section class="prose">
+    <n-h2>字体测试</n-h2>
     <div class="not-prose my-4 grid grid-cols-[auto_auto_1fr] items-center gap-3 text-end">
       <p class="col-span-2">西文独占字符：</p>
       <FontSample :font="font.latin" :text="sample.latin" />
