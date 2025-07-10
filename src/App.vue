@@ -248,6 +248,7 @@ const sample_category = ref<keyof FontSet>("text");
             v-bind:key="category_key"
             :title="category.label"
             class="my-3"
+            @input="sample_category = category_key"
           >
             <p v-if="category.description" class="mt-0">
               {{ category.description }}
@@ -283,23 +284,29 @@ const sample_category = ref<keyof FontSet>("text");
             </n-form-item>
           </n-card>
         </section>
-        <aside>
-          <n-radio-group v-model:value="sample_category">
-            <n-radio-button
-              v-for="(category, category_key) in config"
-              v-bind:key="category_key"
-              :value="category_key"
-              :label="category.label"
-            />
-          </n-radio-group>
-          <FontFamiliesSample
-            :font="font[sample_category]"
-            :category="sample_category"
-          />
-          <n-h2>Typst 代码</n-h2>
-          <pre
-            class="prose"
-          ><code class="block overflow-x-auto max-w-4xs">{{ stringify_FontSet(resolve_FontSet(font), { mode: "markup" }) }}</code></pre>
+        <aside class="prose">
+          <div class="sticky top-2">
+            <section>
+              <n-h2>字体测试</n-h2>
+              <n-radio-group v-model:value="sample_category">
+                <n-radio-button
+                  v-for="(category, category_key) in config"
+                  v-bind:key="category_key"
+                  :value="category_key"
+                  :label="category.label"
+                />
+              </n-radio-group>
+              <FontFamiliesSample
+                :font="font[sample_category]"
+                :category="sample_category"
+              />
+              <p>浏览器渲染效果可能与 typst 不同；请以文字描述为准。</p>
+            </section>
+            <section>
+              <n-h2>Typst 代码</n-h2>
+              <pre><code class="block overflow-x-auto max-w-4xs">{{ stringify_FontSet(resolve_FontSet(font), { mode: "markup" }) || "\n" }}</code></pre>
+            </section>
+          </div>
         </aside>
       </div>
     </main>

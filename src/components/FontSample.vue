@@ -12,10 +12,10 @@ defineProps<{
   <div class="grid grid-cols-2 text-center">
     <div>{{ font ?? "随机字体或豆腐块" }}</div>
     <div
-      class="rounded bg-slate-50 px-4 py-1 shadow dark:bg-slate-800"
+      class="content-center rounded bg-slate-50 px-4 py-1 shadow dark:bg-slate-800"
       :style="{ fontFamily: font ?? '' }"
     >
-      {{ text }}
+      {{ font !== null ? text : text.replaceAll(/./g, "□") }}
     </div>
   </div>
 </template>
