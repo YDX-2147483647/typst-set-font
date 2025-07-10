@@ -22,11 +22,7 @@ const fontFamilies = computed(() => FontFamilies_from(font.value));
     <section>
       <n-h1>Typst set font</n-h1>
       <n-form-item label="选择字体">
-        <n-input
-          v-model:value="font"
-          type="text"
-          placeholder="输入字体名称"
-        />
+        <n-input v-model:value="font" type="text" placeholder="输入字体名称" />
       </n-form-item>
       <FontFamiliesSample :font="fontFamilies" />
     </section>
