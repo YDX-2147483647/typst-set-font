@@ -203,6 +203,7 @@ const config = computed<
           <p>保证全文字体都基本正常，不会随机回落或出现豆腐块。</p>
           <n-card
             v-for="(category, category_key) in config"
+            v-bind:key="category_key"
             :title="category.label"
             class="my-3"
           >
