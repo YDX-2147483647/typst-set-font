@@ -21,3 +21,10 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+/* Override tailwind */
+.n-form-item
+  .n-form-item-feedback-wrapper
+  .n-form-item-feedback.n-form-item-feedback--warning {
+  --tw-prose-links: var(--n-feedback-text-color-warning);
+}

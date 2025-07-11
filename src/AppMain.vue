@@ -17,19 +17,21 @@ import {
   FontFamilies,
   FontSet,
   FontSet_empty,
+  TYPST_FONT,
 } from "./fonts/types.ts";
+import { markdown, type Markdown } from "./markdown.ts";
 
 const font = reactive(FontSet_empty());
 
 function build_validator(
   fn: () => {
     status: "success" | "warning" | "error" | "irrelevant";
-    feedback?: string;
+    feedback?: Markdown;
   },
 ): {
   status: "success" | "warning" | "error";
   disabled: boolean;
-  feedback?: string;
+  feedback?: Markdown;
 } {
   const { status, feedback } = fn();
   return {
@@ -44,14 +46,16 @@ const config = computed<
     keyof FontSet,
     {
       label: string;
-      description?: string;
+      description?: Markdown;
       data: Record<
         keyof Omit<FontFamilies, "rule">,
         {
           label: string;
-          options?: { label: string; key: string | number }[];
           validate?: ReturnType<typeof build_validator>;
-        }
+        } & (
+          | { placeholder?: string }
+          | { options?: { label: string; key: string | number }[] }
+        )
       >;
     }
   >
@@ -59,8 +63,14 @@ const config = computed<
   text: {
     label: "正文",
     data: {
-      latin: { label: "Latin 字体" },
-      han: { label: "中文字体" },
+      latin: {
+        label: "Latin 字体",
+        placeholder: `留空表示默认，即 ${TYPST_FONT.text}`,
+      },
+      han: {
+        label: "中文字体",
+        placeholder: "留空表示不设置，通常回落到楷体，也可能随机或豆腐块",
+      },
       rule: {
         label: "中西共用标点",
         options: [
@@ -89,7 +99,7 @@ const config = computed<
               return {
                 status: "warning",
                 feedback:
-                  "不建议，可选“中文字体”，并利用 smartquote 输入 Latin 标点",
+                  "不建议，可选“中文字体”，并利用 [smartquote](https://typst.app/docs/reference/text/smartquote/) 输入 Latin 标点",
               };
             case FallbackRule.HanOnlyIdeographs:
               return {
@@ -103,11 +113,16 @@ const config = computed<
   },
   code: {
     label: "代码",
-    // TODO: Render markdown
-    description: "代码指 raw。",
+    description: "代码指 [raw](https://typst.app/docs/reference/text/raw/)。",
     data: {
-      latin: { label: "Latin 字体" },
-      han: { label: "中文字体" },
+      latin: {
+        label: "Latin 字体",
+        placeholder: `留空表示默认，即 ${TYPST_FONT.code}`,
+      },
+      han: {
+        label: "中文字体",
+        placeholder: "留空表示不设置，通常回落到隶书或楷体，也可能随机或豆腐块",
+      },
       rule: {
         label: "中西共用标点",
         options: [
@@ -147,15 +162,16 @@ const config = computed<
   },
   math: {
     label: "数学",
-    // TODO: Render markdown
     description:
-      '数学排版指 math.equation 中的变量、分式、积分号等，而中文、Latin 指用 "" 包裹起来的文本。',
+      '数学指 [math.equation](https://typst.app/docs/reference/math/equation/)。以下“数学排版”指其中变量、分式、积分号等，而“中文”“Latin”指其中用 ""包裹起来的文本。',
     data: {
       math: {
         label: "数学排版",
+        placeholder: `留空表示默认，即 ${TYPST_FONT.math}`,
       },
       latin: {
         label: "Latin 字体",
+        placeholder: "留空表示使用数学排版字体",
 
         validate: build_validator(() => {
           const f = resolve_FontFamilies(font.math, "math");
@@ -166,26 +182,27 @@ const config = computed<
           if (f.latin === f.math && f.latin !== f.han) {
             return {
               status: "warning",
-              // TODO: Render markdown
               feedback:
-                "可能遇到 typst#6566，建议数学排版字体加“Math”后缀，而 Latin 字体不加",
+                "可能遇到 [typst#6566](https://github.com/typst/typst/issues/6566)，建议数学排版字体加“Math”后缀，而 Latin 字体不加",
             };
           }
           if (
             f.latin !== f.math &&
             f.latin.toLocaleLowerCase().includes(" Math".toLocaleLowerCase())
           ) {
-            // https://forum.typst.app/t/what-is-the-designed-behaviour-of-font-covers-in-math-equations/5006
             return {
               status: "warning",
               feedback:
-                "选用数学字体用于文本可能会一同替换数学排版的字体，建议删除“Math”后缀或换成“Sans”或“Serif”",
+                "选用数学字体用于文本，可能[一同替换数学排版的字体](https://forum.typst.app/t/what-is-the-designed-behaviour-of-font-covers-in-math-equations/5006)，建议删除“Math”后缀或换成“Sans”或“Serif”",
             };
           }
           return { status: "success" };
         }),
       },
-      han: { label: "中文字体" },
+      han: {
+        label: "中文字体",
+        placeholder: "留空表示不设置，通常回落到楷体，也可能随机或豆腐块",
+      },
       rule: {
         label: "中西共用标点",
         options: [
@@ -235,7 +252,7 @@ const sample_category = ref<keyof FontSet>("text");
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
       <section class="prose">
         <n-h2>基础字体设置</n-h2>
-        <p>保证全文字体都基本正常，不会随机回落或出现豆腐块。</p>
+        <p>保证全文字体都稳定正常，不会随机回落或出现豆腐块。</p>
         <n-card
           v-for="(category, category_key) in config"
           v-bind:key="category_key"
@@ -243,9 +260,11 @@ const sample_category = ref<keyof FontSet>("text");
           class="my-3"
           @input="sample_category = category_key"
         >
-          <p v-if="category.description" class="mt-0">
-            {{ category.description }}
-          </p>
+          <p
+            v-if="category.description"
+            class="mt-0"
+            v-html="markdown(category.description)"
+          />
           <n-form-item
             v-for="(it, key) in category.data"
             :key="key"
@@ -253,10 +272,18 @@ const sample_category = ref<keyof FontSet>("text");
             label-placement="left"
             label-width="7em"
             :validation-status="it.validate?.status"
-            :feedback="it.validate?.feedback"
           >
+            <template #feedback>
+              <span
+                v-html="
+                  it.validate?.feedback
+                    ? markdown(it.validate?.feedback)
+                    : undefined
+                "
+              />
+            </template>
             <n-radio-group
-              v-if="it.options"
+              v-if="'options' in it && it.options"
               v-model:value="font[category_key][key]"
               :disabled="it.validate?.disabled"
             >
@@ -272,6 +299,7 @@ const sample_category = ref<keyof FontSet>("text");
               v-model:value="font[category_key][key]"
               :disabled="it.validate?.disabled"
               :clearable="true"
+              :placeholder="'placeholder' in it ? it.placeholder : ''"
               type="text"
             />
           </n-form-item>

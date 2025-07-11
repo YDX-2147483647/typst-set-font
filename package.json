@@ -11,6 +11,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "marked": "^16.0.0",
     "tailwindcss": "^4.1.11",
     "vue": "^3.4.0"
   },
