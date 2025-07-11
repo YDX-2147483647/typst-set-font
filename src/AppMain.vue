@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  NButton,
   NCard,
   NFormItem,
   NH1,
@@ -41,6 +42,32 @@ function build_validator(
     feedback,
   };
 }
+
+const common_config: Record<string, { label: string; value: string }[]> = {
+  宋体: [
+    { label: "中易", value: "SimSun" },
+    { label: "Fandol", value: "FandolSong" },
+    { label: "思源 Source Han", value: "Source Han Serif" },
+    { label: "思源 Noto CJK", value: "Noto Serif CJK SC" },
+  ],
+  黑体: [
+    { label: "中易", value: "SimHei" },
+    { label: "Fandol", value: "FandolHei" },
+    { label: "思源 Source Han", value: "Source Han Sans" },
+    { label: "思源 Noto CJK", value: "Noto Sans CJK SC" },
+  ],
+  楷体: [
+    { label: "中易", value: "KaiTi" },
+    { label: "Fandol", value: "FandolKai" },
+    { label: "霞鹜", value: "LXGW WenKai GB" },
+  ],
+  仿宋: [
+    { label: "中易", value: "FangSong" },
+    { label: "Fandol", value: "FandolFang R" },
+    { label: "朱雀", value: "Zhuque Fangsong (technical preview)" },
+  ],
+};
+const common_han = ref("");
 
 const config = computed<
   Record<
@@ -254,11 +281,44 @@ const sample_category = ref<keyof FontSet>("text");
       <section class="prose">
         <n-h2>基础字体设置</n-h2>
         <p>保证全文字体都稳定正常，不会随机回落或出现豆腐块。</p>
+        <n-card title="一键统设中文字体" size="small">
+          <p
+            v-for="(options, font_style) in common_config"
+            v-bind:key="font_style"
+            class="flex gap-2"
+          >
+            <span class="inline-block content-center">{{ font_style }}</span>
+            <n-button
+              v-for="{ label, value } in options"
+              :key="value"
+              @click="
+                common_han =
+                  font.text.han =
+                  font.code.han =
+                  font.math.han =
+                    value
+              "
+            >
+              {{ label }}
+            </n-button>
+          </p>
+          <n-form-item label="自行指定" label-placement="left">
+            <n-input
+              type="text"
+              v-model:value="common_han"
+              @input="
+                font.text.han = font.code.han = font.math.han = common_han
+              "
+              :clearable="true"
+              placeholder="可先单击按钮，再自行修改"
+            />
+          </n-form-item>
+        </n-card>
         <n-card
           v-for="(category, category_key) in config"
           v-bind:key="category_key"
           :title="category.label"
-          class="my-3"
+          class="my-3 shadow"
           @input="sample_category = category_key"
         >
           <p
@@ -299,6 +359,11 @@ const sample_category = ref<keyof FontSet>("text");
               v-else
               v-model:value="font[category_key][key]"
               :disabled="it.validate?.disabled"
+              @input="
+                if (key === 'han') {
+                  common_han = '';
+                }
+              "
               :clearable="true"
               :placeholder="'placeholder' in it ? it.placeholder : ''"
               type="text"
