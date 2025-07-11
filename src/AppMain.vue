@@ -45,18 +45,29 @@ function build_validator(
   };
 }
 
-const common_config: Record<string, { label: string; value: string }[]> = {
+const common_config: Record<
+  string,
+  { label: string; value: string; available_in_typst_app?: boolean }[]
+> = {
   宋体: [
+    {
+      label: "思源 Noto CJK",
+      value: "Noto Serif CJK SC",
+      available_in_typst_app: true,
+    },
+    { label: "思源 Source Han", value: "Source Han Serif" },
     { label: "中易", value: "SimSun" },
     { label: "Fandol", value: "FandolSong" },
-    { label: "思源 Source Han", value: "Source Han Serif" },
-    { label: "思源 Noto CJK", value: "Noto Serif CJK SC" },
   ],
   黑体: [
+    {
+      label: "思源 Noto CJK",
+      value: "Noto Sans CJK SC",
+      available_in_typst_app: true,
+    },
+    { label: "思源 Source Han", value: "Source Han Sans" },
     { label: "中易", value: "SimHei" },
     { label: "Fandol", value: "FandolHei" },
-    { label: "思源 Source Han", value: "Source Han Sans" },
-    { label: "思源 Noto CJK", value: "Noto Sans CJK SC" },
   ],
   楷体: [
     { label: "中易", value: "KaiTi" },
@@ -177,7 +188,7 @@ const config = computed<
       },
       han: {
         label: "中文字体",
-        placeholder: "留空表示不设置，通常回落到隶书或楷体，也可能随机或豆腐块",
+        placeholder: "留空表示不设置，通常回落到隶书，也可能随机或豆腐块",
       },
       rule: {
         label: "中西共用标点",
@@ -306,12 +317,34 @@ const typst_code_mode = ref<"markup" | "code">("markup");
 
 <template>
   <main>
-    <n-h1>Typst set font</n-h1>
+    <n-h1>Typst<sup class="align-super text-sm">0.13.1</sup> set font</n-h1>
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
       <section class="prose">
         <n-h2>基础字体设置</n-h2>
         <p>保证全文字体都稳定正常，不会随机回落或出现豆腐块。</p>
         <n-card title="一键统设中文字体" size="small">
+          <p class="indent-2 text-xs">
+            以下
+            <!-- https://primer.style/octicons/icon/codescan-checkmark-16/ -->
+            <svg
+              fill="currentColor"
+              class="ml-1 inline-block align-middle"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              width="12"
+              height="12"
+            >
+              <path
+                d="M10.28 6.28a.75.75 0 1 0-1.06-1.06L6.25 8.19l-.97-.97a.75.75 0 0 0-1.06 1.06l1.5 1.5a.75.75 0 0 0 1.06 0l3.5-3.5Z"
+              ></path>
+              <path
+                d="M7.5 15a7.5 7.5 0 1 1 5.807-2.754l2.473 2.474a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215l-2.474-2.473A7.472 7.472 0 0 1 7.5 15Zm0-13.5a6 6 0 1 0 4.094 10.386.748.748 0 0 1 .293-.292 6.002 6.002 0 0 0 1.117-6.486A6.002 6.002 0 0 0 7.5 1.5Z"
+              ></path>
+            </svg>
+            表示已在
+            <a href="https://typst.app" target="_blank">typst.app</a>
+            预装；其余字体需要手动上传才能使用。
+          </p>
           <p
             v-for="(options, font_style) in common_config"
             v-bind:key="font_style"
@@ -319,8 +352,14 @@ const typst_code_mode = ref<"markup" | "code">("markup");
           >
             <span class="inline-block content-center">{{ font_style }}</span>
             <n-button
-              v-for="{ label, value } in options"
+              v-for="{
+                label,
+                value,
+                available_in_typst_app = false,
+              } in options"
               :key="value"
+              :type="available_in_typst_app ? 'info' : 'default'"
+              ghost
               @click="
                 common_han =
                   font.text.han =
@@ -330,6 +369,23 @@ const typst_code_mode = ref<"markup" | "code">("markup");
               "
             >
               {{ label }}
+              <!-- https://primer.style/octicons/icon/codescan-checkmark-16/ -->
+              <svg
+                v-if="available_in_typst_app"
+                fill="currentColor"
+                class="ml-1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                width="16"
+                height="16"
+              >
+                <path
+                  d="M10.28 6.28a.75.75 0 1 0-1.06-1.06L6.25 8.19l-.97-.97a.75.75 0 0 0-1.06 1.06l1.5 1.5a.75.75 0 0 0 1.06 0l3.5-3.5Z"
+                ></path>
+                <path
+                  d="M7.5 15a7.5 7.5 0 1 1 5.807-2.754l2.473 2.474a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215l-2.474-2.473A7.472 7.472 0 0 1 7.5 15Zm0-13.5a6 6 0 1 0 4.094 10.386.748.748 0 0 1 .293-.292 6.002 6.002 0 0 0 1.117-6.486A6.002 6.002 0 0 0 7.5 1.5Z"
+                ></path>
+              </svg>
             </n-button>
           </p>
           <n-form-item label="自行指定" label-placement="left">
