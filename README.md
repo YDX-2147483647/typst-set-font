@@ -2,6 +2,8 @@
 
 ## References
 
+<!-- The following are used by SeeAlso.vue -->
+
 Packages:
 
 - [ctyp](https://github.com/HPDell/ctyp/tree/6ad2953f8f942cd16ceae29668ece30622e03ed0)
@@ -17,6 +19,10 @@ Websites:
 
 - [FAQ](https://typst-doc-cn.github.io/guide/FAQ.html)
   by Typst中文社区导航
+  - [中英文如何使用不同的字体？](https://typst-doc-cn.github.io/guide/FAQ/lang-fonts.html)
+  - [如何修改公式里的中文字体？](https://typst-doc-cn.github.io/guide/FAQ/equation-chinese-font.html)
+  - [为什么代码块里面的中文字体显示不正常？](https://typst-doc-cn.github.io/guide/FAQ/chinese-in-raw.html)
+  - [引号的字体不对 / 引号的宽度不对](https://typst-doc-cn.github.io/guide/FAQ/smartquote-font.html)
 
 - [Typstで日本語文字と英数字のフォントを別々に指定する](https://zenn.dev/mkpoli/articles/6234c1d2a595bd)
   by mkpoli

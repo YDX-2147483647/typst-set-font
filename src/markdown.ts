@@ -15,3 +15,7 @@ marked.use({ renderer });
 export function markdown(md: string): string | Promise<string> {
   return marked.parseInline(md);
 }
+
+export function markdownBlock(md: string): string | Promise<string> {
+  return marked.parse(md);
+}

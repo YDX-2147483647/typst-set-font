@@ -10,6 +10,7 @@ import {
 } from "naive-ui";
 import { computed, reactive, ref } from "vue";
 import FontFamiliesSample from "./components/FontFamiliesSample.vue";
+import SeeAlso from "./components/SeeAlso.vue";
 import { stringify_FontSet } from "./fonts/as_typst.ts";
 import { resolve_FontFamilies, resolve_FontSet } from "./fonts/resolve.ts";
 import {
@@ -329,6 +330,9 @@ const sample_category = ref<keyof FontSet>("text");
           </section>
         </div>
       </aside>
+    </div>
+    <div class="mt-8">
+      <SeeAlso />
     </div>
   </main>
 </template>
