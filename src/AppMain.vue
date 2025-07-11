@@ -272,6 +272,8 @@ const config = computed<
 }));
 
 const sample_category = ref<keyof FontSet>("text");
+
+const typst_code_mode = ref<"markup" | "code">("markup");
 </script>
 
 <template>
@@ -391,7 +393,17 @@ const sample_category = ref<keyof FontSet>("text");
           </section>
           <section>
             <n-h2>Typst 代码</n-h2>
-            <pre><code class="block overflow-x-auto max-w-4xs">{{ stringify_FontSet(resolve_FontSet(font), { mode: "markup" }) || "\n" }}</code></pre>
+            <n-radio-group v-model:value="typst_code_mode">
+              <n-radio-button
+                v-for="mode in ['markup', 'code']"
+                :key="mode"
+                :value="mode"
+                :label="mode"
+              />
+            </n-radio-group>
+            <pre><code class="block overflow-x-auto max-w-4xs">{{
+              stringify_FontSet(resolve_FontSet(font), { mode: typst_code_mode }) || "// 未设置字体"
+            }}</code></pre>
           </section>
         </div>
       </aside>
