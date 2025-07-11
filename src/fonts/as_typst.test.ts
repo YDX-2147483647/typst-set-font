@@ -243,3 +243,86 @@ describe("stringify_FontSet", () => {
     ).toBe("");
   });
 });
+
+describe("stringify_FontSet with FontSetAdvanced", () => {
+  const arial = FontFamilies_from("Arial");
+  const times = FontFamilies_from("Times New Roman");
+
+  describe("list_marker_prefer_default", () => {
+    it("should handle list_marker_prefer_default when true and text font differs from default", () => {
+      const fontSet = {
+        text: arial,
+        math: null,
+        code: null,
+        list_marker_prefer_default: true,
+      };
+      const result = stringify_FontSet(fontSet, { mode: "code" });
+      expect(result).toBe(
+        [
+          'set text(font: "Arial")',
+          'set list(marker: ([•], [‣], [–]).map(text.with(font: "Libertinus Serif")))',
+        ].join("\n"),
+      );
+    });
+
+    it("should handle list_marker_prefer_default when true and text font is default", () => {
+      const fontSet = {
+        text: FontFamilies_from(TYPST_FONT.text),
+        math: null,
+        code: null,
+        list_marker_prefer_default: true,
+      };
+      const result = stringify_FontSet(fontSet, { mode: "code" });
+      expect(result).toBe('set text(font: "Libertinus Serif")');
+    });
+
+    it("should handle list_marker_prefer_default when false", () => {
+      const fontSet = {
+        text: arial,
+        math: null,
+        code: null,
+        list_marker_prefer_default: false,
+      };
+      const result = stringify_FontSet(fontSet, { mode: "code" });
+      expect(result).toBe('set text(font: "Arial")');
+    });
+
+    it("should generate markup mode with list_marker_prefer_default", () => {
+      const fontSet = {
+        text: times,
+        math: null,
+        code: null,
+        list_marker_prefer_default: true,
+      };
+      const result = stringify_FontSet(fontSet, { mode: "markup" });
+      expect(result).toBe(
+        [
+          '#set text(font: "Times New Roman")',
+          '#set list(marker: ([•], [‣], [–]).map(text.with(font: "Libertinus Serif")))',
+        ].join("\n"),
+      );
+    });
+
+    it("should combine all features with different fonts and list_marker_prefer_default", () => {
+      const fontSet = {
+        text: {
+          latin: "Arial",
+          han: "SimSun",
+          rule: FallbackRule.HanFirst,
+        },
+        math: MathFontFamilies_from("Fira Math"),
+        code: FontFamilies_from("Fira Mono"),
+        list_marker_prefer_default: true,
+      };
+      const result = stringify_FontSet(fontSet, { mode: "markup" });
+      expect(result).toBe(
+        [
+          '#set text(font: ((name: "Arial", covers: "latin-in-cjk"), "SimSun"))',
+          '#show math.equation: set text(font: "Fira Math")',
+          '#show raw: set text(font: "Fira Mono")',
+          '#set list(marker: ([•], [‣], [–]).map(text.with(font: "Libertinus Serif")))',
+        ].join("\n"),
+      );
+    });
+  });
+});

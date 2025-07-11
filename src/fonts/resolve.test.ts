@@ -329,5 +329,31 @@ describe("resolve_FontFamilies", () => {
         rule: FallbackRule.LatinFirst,
       });
     });
+
+    it("should preserve additional properties while resolving fonts", () => {
+      const font = {
+        text: FontFamilies_from("Arial"),
+        math: {
+          latin: "Computer Modern",
+          han: null,
+          math: "Computer Modern Math",
+          rule: FallbackRule.LatinFirst,
+        } as MathFontFamilies,
+        code: FontFamilies_from("Consolas"),
+      };
+      const additional = {
+        attr: "whatever",
+      };
+
+      expect(
+        resolve_FontSet({
+          ...font,
+          ...additional,
+        }),
+      ).toEqual({
+        ...resolve_FontSet(font),
+        ...additional,
+      });
+    });
   });
 });

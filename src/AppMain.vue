@@ -8,6 +8,7 @@ import {
   NInput,
   NRadioButton,
   NRadioGroup,
+  NSwitch,
 } from "naive-ui";
 import { computed, reactive, ref } from "vue";
 import FontFamiliesSample from "./components/FontFamiliesSample.vue";
@@ -19,6 +20,7 @@ import {
   FontFamilies,
   FontSet,
   FontSet_empty,
+  FontSetAdvanced,
   TYPST_FONT,
 } from "./fonts/types.ts";
 import { markdown, type Markdown } from "./markdown.ts";
@@ -81,8 +83,9 @@ const config = computed<
           label: string;
           validate?: ReturnType<typeof build_validator>;
         } & (
-          | { placeholder?: string }
-          | { options?: { label: string; key: string | number }[] }
+          | { placeholder?: string } // text input
+          | { options?: { label: string; key: string | number }[] } // radio
+          | { default_checked: boolean; advanced: true } // checkbox
         )
       >;
     }
@@ -134,6 +137,31 @@ const config = computed<
                 status: "warning",
                 feedback: "可能导致逗号等中文独占标点变成□，建议改选“中文字体”",
               };
+          }
+        }),
+      },
+      list_marker_prefer_default: {
+        label: "项目符号除外",
+        default_checked: false,
+        advanced: true,
+        validate: build_validator(() => {
+          const shared =
+            "是否将字体设置排除无序列表的项目符号 [list.marker](https://typst.app/docs/reference/model/list/#parameters-marker)——";
+
+          const f = resolve_FontFamilies(font.text, "text");
+          if (f === null || f.latin === TYPST_FONT.text) {
+            return {
+              status: "irrelevant",
+              feedback:
+                shared + "现在 list.marker 已采用 Typst 默认字体，无需专门排除",
+            };
+          } else {
+            return {
+              status: "success",
+              feedback:
+                shared +
+                "思源宋体 SC/TC/HK 等字体的 •‣– 太小，不适合用于 list.marker，可开启此项恢复 Typst 默认字体",
+            };
           }
         }),
       },
@@ -357,6 +385,18 @@ const typst_code_mode = ref<"markup" | "code">("markup");
                 :label="label"
               />
             </n-radio-group>
+            <n-switch
+              v-else-if="
+                'advanced' in it && it.advanced && 'default_checked' in it
+              "
+              v-model:value="
+                (font as FontSetAdvanced)[
+                  key as keyof FontSetAdvanced
+                ] as boolean
+              "
+              :disabled="it.validate?.disabled"
+              :default-value="it.default_checked"
+            />
             <n-input
               v-else
               v-model:value="font[category_key][key]"
@@ -389,7 +429,7 @@ const typst_code_mode = ref<"markup" | "code">("markup");
               :font="font[sample_category]"
               :category="sample_category"
             />
-            <p>浏览器渲染效果可能与 typst 不同；请以文字描述为准。</p>
+            <p>浏览器渲染效果可能与 Typst 不同；请以文字描述为准。</p>
           </section>
           <section>
             <n-h2>Typst 代码</n-h2>

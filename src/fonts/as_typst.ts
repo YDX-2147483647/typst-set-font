@@ -5,7 +5,9 @@
 
 import {
   FallbackRule,
+  FontSetAdvanced,
   FontSetResolved,
+  TYPST_FONT,
   type FontFamilies,
   type FontName,
   type MathFontFamilies,
@@ -59,7 +61,7 @@ export function stringify_FontFamilies(font: Resolved<FontFamilies>): string {
 }
 
 export function stringify_FontSet(
-  font: FontSetResolved,
+  font: FontSetResolved | (FontSetResolved & FontSetAdvanced),
   { mode }: { mode: "markup" | "code" },
 ): string {
   // TODO: Support `FontSetAdvanced` and `FontSetPersonal`.
@@ -71,6 +73,11 @@ export function stringify_FontSet(
       : null,
     font.code
       ? `show raw: set text(font: ${stringify_FontFamilies(font.code)})`
+      : null,
+    "list_marker_prefer_default" in font &&
+    font.list_marker_prefer_default &&
+    font.text?.latin !== TYPST_FONT.text
+      ? `set list(marker: ([•], [‣], [–]).map(text.with(font: "${TYPST_FONT.text}")))`
       : null,
   ]
     .filter(Boolean)

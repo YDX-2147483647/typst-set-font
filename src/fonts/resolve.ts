@@ -72,10 +72,14 @@ export function resolve_FontFamilies(
  *
  * If a category’s font is not set, then it will be replaced with `null`.
  */
-export function resolve_FontSet(font: FontSet): FontSetResolved {
+export function resolve_FontSet<T extends FontSet>(
+  font: T,
+): FontSetResolved & Omit<T, keyof FontSet> {
+  const { text, math, code, ...others } = font;
   return {
-    text: resolve_FontFamilies(font.text, "text"),
-    math: resolve_FontFamilies(font.math, "math"),
-    code: resolve_FontFamilies(font.code, "code"),
+    text: resolve_FontFamilies(text, "text"),
+    math: resolve_FontFamilies(math, "math"),
+    code: resolve_FontFamilies(code, "code"),
+    ...others,
   };
 }
