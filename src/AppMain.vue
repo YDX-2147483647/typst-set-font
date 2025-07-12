@@ -347,7 +347,9 @@ const sample_category = ref<keyof FontSet>("text");
 
 <template>
   <main>
-    <n-h1>Typst<sup class="align-super text-sm">0.13.1</sup> set font</n-h1>
+    <n-h1 class="pl-8"
+      >Typst<sup class="align-super text-sm">0.13.1</sup> set font</n-h1
+    >
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
       <div class="prose dark:prose-invert pl-8">
         <section>
