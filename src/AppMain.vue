@@ -349,7 +349,7 @@ const sample_category = ref<keyof FontSet>("text");
   <main>
     <n-h1>Typst<sup class="align-super text-sm">0.13.1</sup> set font</n-h1>
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
-      <div class="prose pl-8">
+      <div class="prose dark:prose-invert pl-8">
         <section>
           <n-h2>基础字体设置</n-h2>
           <p>保证全文字体都稳定正常，不会随机回落或出现豆腐块。</p>
@@ -517,7 +517,7 @@ const sample_category = ref<keyof FontSet>("text");
           </ul>
         </section>
       </div>
-      <aside class="prose">
+      <aside class="prose dark:prose-invert">
         <div class="sticky top-2 max-h-screen overflow-y-auto pr-8">
           <section>
             <n-h2>字体测试</n-h2>

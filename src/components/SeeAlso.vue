@@ -10,7 +10,7 @@ const md = readme.replace(
 </script>
 
 <template>
-  <section class="prose">
+  <section class="prose dark:prose-invert">
     <n-h2>参考</n-h2>
     <div :class="$style.md" v-html="markdownBlock(md)"></div>
   </section>

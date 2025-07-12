@@ -6,15 +6,6 @@
   line-height: 1.5;
   font-weight: 400;
 
-  --tw-prose-body: #222;
-  @media (prefers-color-scheme: dark) {
-    &,
-    & .prose {
-      --tw-prose-headings: #ccc;
-      --tw-prose-body: #ccc;
-    }
-  }
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
