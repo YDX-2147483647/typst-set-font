@@ -21,3 +21,38 @@ jobs:
       - run: pnpm install
       - run: pnpm check
       - run: pnpm build
+
+  typst:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install
+      - uses: typst-community/setup-typst@v4
+
+      - name: Restore cached fonts
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            fonts/
+          key: fonts-${{ hashFiles('scripts/download-fonts.ts') }}
+          restore-keys: |
+            fonts-${{ hashFiles('scripts/download-fonts.ts') }}
+            fonts-
+      - run: pnpm download-fonts
+      - run: |
+          typst compile docs/coverage.typ --font-path fonts
+      - run: |
+          typst compile docs/regex.typ --font-path fonts
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: docs-pdf
+          path: docs/*.pdf
