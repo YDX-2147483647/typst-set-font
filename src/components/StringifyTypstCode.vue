@@ -13,13 +13,13 @@ const { font } = defineProps<{
 
 const mode = ref<"markup" | "code">("markup");
 
-const remove_prefix = (str: string, prefices: string[]): string =>
-  prefices.reduce(
+const remove_prefix = (str: string, prefixes: string[]): string =>
+  prefixes.reduce(
     (s, prefix) => (s.startsWith(prefix) ? s.slice(prefix.length) : s),
     str,
   );
-const remove_suffix = (str: string, suffix: string[]): string =>
-  suffix.reduce(
+const remove_suffix = (str: string, suffixes: string[]): string =>
+  suffixes.reduce(
     (s, suffix) => (s.endsWith(suffix) ? s.slice(0, -suffix.length) : s),
     str,
   );
@@ -27,7 +27,7 @@ const remove_suffix = (str: string, suffix: string[]): string =>
 const code = computed(() => {
   const raw = stringify_FontSet(resolve_FontSet(font), {
     mode: mode.value,
-    afterwords: stringify_advanced(calc_advanced(font)),
+    postscript: stringify_advanced(calc_advanced(font)),
   });
 
   if (!raw) {

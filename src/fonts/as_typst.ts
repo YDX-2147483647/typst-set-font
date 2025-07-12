@@ -61,7 +61,7 @@ export function stringify_FontFamilies(font: Resolved<FontFamilies>): string {
 
 export function stringify_FontSet(
   font: FontSetResolved | (FontSetResolved & FontSetAdvanced),
-  { mode, afterwords = [] }: { mode: "markup" | "code"; afterwords?: string[] },
+  { mode, postscript = [] }: { mode: "markup" | "code"; postscript?: string[] },
 ): string {
   return [
     font.text ? `set text(font: ${stringify_FontFamilies(font.text)})` : null,
@@ -71,7 +71,7 @@ export function stringify_FontSet(
     font.code
       ? `show raw: set text(font: ${stringify_FontFamilies(font.code)})`
       : null,
-    ...afterwords,
+    ...postscript,
   ]
     .filter(Boolean)
     .map((row) => (mode === "markup" ? `#${row}` : row))

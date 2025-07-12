@@ -22,7 +22,7 @@ describe("stringify_FontSet with FontSetAdvanced", () => {
       };
       const result = stringify_FontSet(font, {
         mode: "markup",
-        afterwords: stringify_advanced(calc_advanced(font)),
+        postscript: stringify_advanced(calc_advanced(font)),
       });
       expect(result).toBe(
         [
