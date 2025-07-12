@@ -13,8 +13,9 @@ import {
 import { computed, reactive, ref } from "vue";
 import FontFamiliesSample from "./components/FontFamiliesSample.vue";
 import SeeAlso from "./components/SeeAlso.vue";
-import { stringify_FontSet } from "./fonts/as_typst.ts";
-import { resolve_FontFamilies, resolve_FontSet } from "./fonts/resolve.ts";
+import StringifyTypstCode from "./components/StringifyTypstCode.vue";
+import { calc_advanced } from "./fonts/advanced.ts";
+import { resolve_FontFamilies } from "./fonts/resolve.ts";
 import {
   FallbackRule,
   FontFamilies,
@@ -25,7 +26,7 @@ import {
 } from "./fonts/types.ts";
 import { markdown, type Markdown } from "./markdown.ts";
 
-const font = reactive(FontSet_empty());
+const font: FontSetAdvanced = reactive(FontSet_empty());
 
 function build_validator(
   fn: () => {
@@ -96,7 +97,7 @@ const config = computed<
         } & (
           | { placeholder?: string } // text input
           | { options?: { label: string; key: string | number }[] } // radio
-          | { default_checked: boolean; advanced: true } // checkbox
+          | { type: "check"; advanced: true } // checkbox
         )
       >;
     }
@@ -141,7 +142,7 @@ const config = computed<
               return {
                 status: "warning",
                 feedback:
-                  "不建议，可选“中文字体”，并利用 [smartquote](https://typst.app/docs/reference/text/smartquote/) 输入 Latin 标点",
+                  "不建议，可选“中文字体”，并利用智能引号 [smartquote](https://typst.app/docs/reference/text/smartquote/) 输入西文标点",
               };
             case FallbackRule.HanOnlyIdeographs:
               return {
@@ -151,16 +152,47 @@ const config = computed<
           }
         }),
       },
+      smartquote_for_latin: {
+        label: "西文智能引号",
+        type: "check",
+        advanced: true,
+        validate: build_validator(() => {
+          const shared =
+            "是否将智能引号 [smartquote](https://typst.app/docs/reference/text/smartquote/) 设为西文比例宽度——";
+
+          const f = calc_advanced(font);
+          if (f.smartquote_for_latin !== null) {
+            return {
+              status: "success",
+              feedback:
+                shared +
+                (f.smartquote_for_latin
+                  ? "智能引号将用 Latin 字体，直接输入的引号将用中文字体" +
+                    (f.text.han === f.text.latin
+                      ? "（需要思源等支持 [OpenType pwid 比例宽度特性](https://learn.microsoft.com/en-us/typography/opentype/spec/features_pt#tag-pwid)的字体）"
+                      : "")
+                  : "目前关闭，智能引号的字体将与直接输入的引号相同"),
+            };
+          } else {
+            return {
+              status: "irrelevant",
+              feedback:
+                shared +
+                "只有设置了字体，且中西共用标点设为中文字体时，才能设置此项",
+            };
+          }
+        }),
+      },
       list_marker_prefer_default: {
         label: "项目符号除外",
-        default_checked: false,
+        type: "check",
         advanced: true,
         validate: build_validator(() => {
           const shared =
             "是否将字体设置排除无序列表的项目符号 [list.marker](https://typst.app/docs/reference/model/list/#parameters-marker)——";
 
-          const f = resolve_FontFamilies(font.text, "text");
-          if (f === null || f.latin === TYPST_FONT.text) {
+          const f = calc_advanced(font);
+          if (f.list_marker_prefer_default === null) {
             return {
               status: "irrelevant",
               feedback:
@@ -311,8 +343,6 @@ const config = computed<
 }));
 
 const sample_category = ref<keyof FontSet>("text");
-
-const typst_code_mode = ref<"markup" | "code">("markup");
 </script>
 
 <template>
@@ -442,16 +472,13 @@ const typst_code_mode = ref<"markup" | "code">("markup");
               />
             </n-radio-group>
             <n-switch
-              v-else-if="
-                'advanced' in it && it.advanced && 'default_checked' in it
-              "
+              v-else-if="'advanced' in it && it.advanced && it.type === 'check'"
               v-model:value="
                 (font as FontSetAdvanced)[
                   key as keyof FontSetAdvanced
                 ] as boolean
               "
               :disabled="it.validate?.disabled"
-              :default-value="it.default_checked"
             />
             <n-input
               v-else
@@ -489,17 +516,7 @@ const typst_code_mode = ref<"markup" | "code">("markup");
           </section>
           <section>
             <n-h2>Typst 代码</n-h2>
-            <n-radio-group v-model:value="typst_code_mode">
-              <n-radio-button
-                v-for="mode in ['markup', 'code']"
-                :key="mode"
-                :value="mode"
-                :label="mode"
-              />
-            </n-radio-group>
-            <pre><code class="block overflow-x-auto max-w-4xs">{{
-              stringify_FontSet(resolve_FontSet(font), { mode: typst_code_mode }) || "// 未设置字体"
-            }}</code></pre>
+            <StringifyTypstCode :font="font" />
           </section>
         </div>
       </aside>

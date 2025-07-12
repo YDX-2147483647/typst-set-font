@@ -136,9 +136,9 @@ export interface FontSetAdvanced extends FontSet {
   /** [`strong` in typst](https://typst.app/docs/reference/model/strong/) */
   strong?: FontFamilies | CUTI;
   /** Whether to revert to the default font for [`list.marker` in typst](https://typst.app/docs/reference/model/list/#parameters-marker) */
-  list_marker_prefer_default?: boolean;
+  list_marker_prefer_default?: boolean | null;
   /** Whether [`smartquote` in typst](https://typst.app/docs/reference/text/smartquote/) is used exclusively for Latin */
-  smartquote_for_latin?: boolean;
+  smartquote_for_latin?: boolean | null;
 }
 
 /**
