@@ -349,65 +349,21 @@ const sample_category = ref<keyof FontSet>("text");
   <main>
     <n-h1>Typst<sup class="align-super text-sm">0.13.1</sup> set font</n-h1>
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
-      <section class="prose">
-        <n-h2>基础字体设置</n-h2>
-        <p>保证全文字体都稳定正常，不会随机回落或出现豆腐块。</p>
-        <n-card title="一键统设中文字体" size="small">
-          <p class="indent-2 text-xs">
-            以下
-            <!-- https://primer.style/octicons/icon/codescan-checkmark-16/ -->
-            <svg
-              fill="currentColor"
-              class="ml-1 inline-block align-middle"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              width="12"
-              height="12"
-            >
-              <path
-                d="M10.28 6.28a.75.75 0 1 0-1.06-1.06L6.25 8.19l-.97-.97a.75.75 0 0 0-1.06 1.06l1.5 1.5a.75.75 0 0 0 1.06 0l3.5-3.5Z"
-              ></path>
-              <path
-                d="M7.5 15a7.5 7.5 0 1 1 5.807-2.754l2.473 2.474a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215l-2.474-2.473A7.472 7.472 0 0 1 7.5 15Zm0-13.5a6 6 0 1 0 4.094 10.386.748.748 0 0 1 .293-.292 6.002 6.002 0 0 0 1.117-6.486A6.002 6.002 0 0 0 7.5 1.5Z"
-              ></path>
-            </svg>
-            表示已在
-            <a href="https://typst.app" target="_blank">typst.app</a>
-            预装；其余字体需要手动上传才能使用。
-          </p>
-          <p
-            v-for="(options, font_style) in common_config"
-            v-bind:key="font_style"
-            class="flex gap-2"
-          >
-            <span class="inline-block content-center">{{ font_style }}</span>
-            <n-button
-              v-for="{
-                label,
-                value,
-                available_in_typst_app = false,
-              } in options"
-              :key="value"
-              :type="available_in_typst_app ? 'info' : 'default'"
-              ghost
-              @click="
-                common_han =
-                  font.text.han =
-                  font.code.han =
-                  font.math.han =
-                    value
-              "
-            >
-              {{ label }}
+      <div class="prose pl-8">
+        <section>
+          <n-h2>基础字体设置</n-h2>
+          <p>保证全文字体都稳定正常，不会随机回落或出现豆腐块。</p>
+          <n-card title="一键统设中文字体" size="small">
+            <p class="indent-2 text-xs">
+              以下
               <!-- https://primer.style/octicons/icon/codescan-checkmark-16/ -->
               <svg
-                v-if="available_in_typst_app"
                 fill="currentColor"
-                class="ml-1"
+                class="ml-1 inline-block align-middle"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
-                width="16"
-                height="16"
+                width="12"
+                height="12"
               >
                 <path
                   d="M10.28 6.28a.75.75 0 1 0-1.06-1.06L6.25 8.19l-.97-.97a.75.75 0 0 0-1.06 1.06l1.5 1.5a.75.75 0 0 0 1.06 0l3.5-3.5Z"
@@ -416,88 +372,153 @@ const sample_category = ref<keyof FontSet>("text");
                   d="M7.5 15a7.5 7.5 0 1 1 5.807-2.754l2.473 2.474a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215l-2.474-2.473A7.472 7.472 0 0 1 7.5 15Zm0-13.5a6 6 0 1 0 4.094 10.386.748.748 0 0 1 .293-.292 6.002 6.002 0 0 0 1.117-6.486A6.002 6.002 0 0 0 7.5 1.5Z"
                 ></path>
               </svg>
-            </n-button>
-          </p>
-          <n-form-item label="自行指定" label-placement="left">
-            <n-input
-              type="text"
-              v-model:value="common_han"
-              @input="
-                font.text.han = font.code.han = font.math.han = common_han
-              "
-              :clearable="true"
-              placeholder="可先单击按钮，再自行修改"
-            />
-          </n-form-item>
-        </n-card>
-        <n-card
-          v-for="(category, category_key) in config"
-          v-bind:key="category_key"
-          :title="category.label"
-          class="my-3 shadow"
-          @input="sample_category = category_key"
-        >
-          <p
-            v-if="category.description"
-            class="mt-0"
-            v-html="markdown(category.description)"
-          />
-          <n-form-item
-            v-for="(it, key) in category.data"
-            :key="key"
-            :label="it.label"
-            label-placement="left"
-            label-width="7em"
-            :validation-status="it.validate?.status"
-          >
-            <template #feedback>
-              <span
-                v-html="
-                  it.validate?.feedback
-                    ? markdown(it.validate?.feedback)
-                    : undefined
-                "
-              />
-            </template>
-            <n-radio-group
-              v-if="'options' in it && it.options"
-              v-model:value="font[category_key][key]"
-              :disabled="it.validate?.disabled"
+              表示已在
+              <a href="https://typst.app" target="_blank">typst.app</a>
+              预装；其余字体需要手动上传才能使用。
+            </p>
+            <p
+              v-for="(options, font_style) in common_config"
+              v-bind:key="font_style"
+              class="flex gap-2"
             >
-              <n-radio-button
-                v-for="{ key, label } in it.options"
-                :key="key"
-                :value="key"
-                :label="label"
+              <span class="inline-block content-center">{{ font_style }}</span>
+              <n-button
+                v-for="{
+                  label,
+                  value,
+                  available_in_typst_app = false,
+                } in options"
+                :key="value"
+                :type="available_in_typst_app ? 'info' : 'default'"
+                ghost
+                @click="
+                  common_han =
+                    font.text.han =
+                    font.code.han =
+                    font.math.han =
+                      value
+                "
+              >
+                {{ label }}
+                <!-- https://primer.style/octicons/icon/codescan-checkmark-16/ -->
+                <svg
+                  v-if="available_in_typst_app"
+                  fill="currentColor"
+                  class="ml-1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 16 16"
+                  width="16"
+                  height="16"
+                >
+                  <path
+                    d="M10.28 6.28a.75.75 0 1 0-1.06-1.06L6.25 8.19l-.97-.97a.75.75 0 0 0-1.06 1.06l1.5 1.5a.75.75 0 0 0 1.06 0l3.5-3.5Z"
+                  ></path>
+                  <path
+                    d="M7.5 15a7.5 7.5 0 1 1 5.807-2.754l2.473 2.474a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215l-2.474-2.473A7.472 7.472 0 0 1 7.5 15Zm0-13.5a6 6 0 1 0 4.094 10.386.748.748 0 0 1 .293-.292 6.002 6.002 0 0 0 1.117-6.486A6.002 6.002 0 0 0 7.5 1.5Z"
+                  ></path>
+                </svg>
+              </n-button>
+            </p>
+            <n-form-item label="自行指定" label-placement="left">
+              <n-input
+                type="text"
+                v-model:value="common_han"
+                @input="
+                  font.text.han = font.code.han = font.math.han = common_han
+                "
+                :clearable="true"
+                placeholder="可先单击按钮，再自行修改"
               />
-            </n-radio-group>
-            <n-switch
-              v-else-if="'advanced' in it && it.advanced && it.type === 'check'"
-              v-model:value="
-                (font as FontSetAdvanced)[
-                  key as keyof FontSetAdvanced
-                ] as boolean
-              "
-              :disabled="it.validate?.disabled"
+            </n-form-item>
+          </n-card>
+          <n-card
+            v-for="(category, category_key) in config"
+            v-bind:key="category_key"
+            :title="category.label"
+            class="my-3 shadow"
+            @input="sample_category = category_key"
+          >
+            <p
+              v-if="category.description"
+              class="mt-0"
+              v-html="markdown(category.description)"
             />
-            <n-input
-              v-else
-              v-model:value="font[category_key][key]"
-              :disabled="it.validate?.disabled"
-              @input="
-                if (key === 'han') {
-                  common_han = '';
-                }
-              "
-              :clearable="true"
-              :placeholder="'placeholder' in it ? it.placeholder : ''"
-              type="text"
-            />
-          </n-form-item>
-        </n-card>
-      </section>
+            <n-form-item
+              v-for="(it, key) in category.data"
+              :key="key"
+              :label="it.label"
+              label-placement="left"
+              label-width="7em"
+              :validation-status="it.validate?.status"
+            >
+              <template #feedback>
+                <span
+                  v-html="
+                    it.validate?.feedback
+                      ? markdown(it.validate?.feedback)
+                      : undefined
+                  "
+                />
+              </template>
+              <n-radio-group
+                v-if="'options' in it && it.options"
+                v-model:value="font[category_key][key]"
+                :disabled="it.validate?.disabled"
+              >
+                <n-radio-button
+                  v-for="{ key, label } in it.options"
+                  :key="key"
+                  :value="key"
+                  :label="label"
+                />
+              </n-radio-group>
+              <n-switch
+                v-else-if="
+                  'advanced' in it && it.advanced && it.type === 'check'
+                "
+                v-model:value="
+                  (font as FontSetAdvanced)[
+                    key as keyof FontSetAdvanced
+                  ] as boolean
+                "
+                :disabled="it.validate?.disabled"
+              />
+              <n-input
+                v-else
+                v-model:value="font[category_key][key]"
+                :disabled="it.validate?.disabled"
+                @input="
+                  if (key === 'han') {
+                    common_han = '';
+                  }
+                "
+                :clearable="true"
+                :placeholder="'placeholder' in it ? it.placeholder : ''"
+                type="text"
+              />
+            </n-form-item>
+          </n-card>
+        </section>
+        <section class="mt-8">
+          <n-h2>特殊字体设置</n-h2>
+          <p>保证特殊样式符合习惯。</p>
+          <p>TODO：接口尚未实现。</p>
+          <ul>
+            <li>emph</li>
+            <li>strong</li>
+          </ul>
+        </section>
+        <section class="mt-8">
+          <n-h2>偏好字体设置</n-h2>
+          <p>设置个人偏好样式。以下未必满足要求，建议另外自行设置。</p>
+          <p>TODO：接口尚未实现。</p>
+          <ul>
+            <li>heading</li>
+          </ul>
+        </section>
+      </div>
       <aside class="prose">
-        <div class="sticky top-2">
+        <div class="sticky top-2 max-h-screen overflow-y-auto pr-8">
           <section>
             <n-h2>字体测试</n-h2>
             <n-radio-group v-model:value="sample_category">
@@ -521,7 +542,7 @@ const sample_category = ref<keyof FontSet>("text");
         </div>
       </aside>
     </div>
-    <div class="mt-8">
+    <div class="mt-8 px-8">
       <SeeAlso />
     </div>
   </main>
