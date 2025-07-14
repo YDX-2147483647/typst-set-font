@@ -157,6 +157,12 @@ import { markdownBlock } from "../markdown.ts";
         先用中文字体渲染汉字；再补充用 Latin 字体渲染，不能渲染则放弃
       </figcaption>
     </figure>
+    <p>
+      关于字体覆盖的更多例子可参考
+      <a href="/docs/coverage.pdf">coverage.pdf</a
+      >，关于正则表达式的更多例子可参考
+      <a href="/docs/regex.pdf">regex.pdf</a>。
+    </p>
   </section>
 </template>
 
