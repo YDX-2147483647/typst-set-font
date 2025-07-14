@@ -3,14 +3,13 @@ import {
   NButton,
   NCard,
   NFormItem,
-  NH1,
-  NH2,
   NInput,
   NRadioButton,
   NRadioGroup,
   NSwitch,
 } from "naive-ui";
 import { computed, reactive, ref } from "vue";
+import AddendumSection from "./components/AddendumSection.vue";
 import FontFamiliesSample from "./components/FontFamiliesSample.vue";
 import SeeAlso from "./components/SeeAlso.vue";
 import StringifyTypstCode from "./components/StringifyTypstCode.vue";
@@ -347,13 +346,15 @@ const sample_category = ref<keyof FontSet>("text");
 
 <template>
   <main>
-    <n-h1 class="pl-8"
-      >Typst<sup class="align-super text-sm">0.13.1</sup> set font</n-h1
-    >
+    <div class="prose dark:prose-invert">
+      <h1 class="pl-8">
+        Typst<sup class="align-super text-sm">0.13.1</sup> set font
+      </h1>
+    </div>
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
       <div class="prose dark:prose-invert pl-8">
         <section>
-          <n-h2>基础字体设置</n-h2>
+          <h2>基础字体设置</h2>
           <p>保证全文字体都稳定正常，不会随机回落或出现豆腐块。</p>
           <n-card title="一键统设中文字体" size="small">
             <p class="indent-2 text-xs">
@@ -502,16 +503,21 @@ const sample_category = ref<keyof FontSet>("text");
           </n-card>
         </section>
         <section class="mt-8">
-          <n-h2>特殊字体设置</n-h2>
+          <h2>特殊字体设置</h2>
           <p>保证特殊样式符合习惯。</p>
           <p>TODO：接口尚未实现。</p>
           <ul>
-            <li>emph</li>
-            <li>strong</li>
+            <li>emph：忽略／换中文字体</li>
+            <li>
+              strong：用字体提供的字重／换中文字体／<a
+                href="https://csimide.github.io/cuti-docs/zh-CN/fakebold.html"
+                >cuti</a
+              >
+            </li>
           </ul>
         </section>
         <section class="mt-8">
-          <n-h2>偏好字体设置</n-h2>
+          <h2>偏好字体设置</h2>
           <p>设置个人偏好样式。以下未必满足要求，建议另外自行设置。</p>
           <p>TODO：接口尚未实现。</p>
           <ul>
@@ -522,7 +528,7 @@ const sample_category = ref<keyof FontSet>("text");
       <aside class="prose dark:prose-invert">
         <div class="sticky top-2 max-h-screen overflow-y-auto pr-8">
           <section>
-            <n-h2>字体测试</n-h2>
+            <h2>字体测试</h2>
             <n-radio-group v-model:value="sample_category">
               <n-radio-button
                 v-for="(category, category_key) in config"
@@ -538,14 +544,17 @@ const sample_category = ref<keyof FontSet>("text");
             <p>浏览器渲染效果可能与 Typst 不同；请以文字描述为准。</p>
           </section>
           <section>
-            <n-h2>Typst 代码</n-h2>
+            <h2>Typst 代码</h2>
             <StringifyTypstCode :font="font" />
           </section>
         </div>
       </aside>
     </div>
-    <div class="mt-8 px-8">
-      <SeeAlso />
+    <div class="grid justify-center px-8">
+      <div class="prose dark:prose-invert">
+        <AddendumSection />
+        <SeeAlso />
+      </div>
     </div>
   </main>
 </template>

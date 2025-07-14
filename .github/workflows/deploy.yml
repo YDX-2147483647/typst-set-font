@@ -18,6 +18,20 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install
+      - uses: typst-community/setup-typst@v4
+
+      - name: Restore cached fonts
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: |
+            fonts/
+          key: fonts-${{ hashFiles('scripts/download-fonts.ts') }}
+          restore-keys: |
+            fonts-${{ hashFiles('scripts/download-fonts.ts') }}
+            fonts-
+
+      - run: pnpm just build-public
       - run: pnpm build
       - id: deployment
         uses: actions/upload-pages-artifact@v3

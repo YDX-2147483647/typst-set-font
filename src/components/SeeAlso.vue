@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { NH2 } from "naive-ui";
 import readme from "../../README.md?raw";
 import { markdownBlock } from "../markdown.ts";
 
@@ -10,8 +9,8 @@ const md = readme.replace(
 </script>
 
 <template>
-  <section class="prose dark:prose-invert">
-    <n-h2>参考</n-h2>
+  <section>
+    <h2>参考</h2>
     <div :class="$style.md" v-html="markdownBlock(md)"></div>
   </section>
 </template>

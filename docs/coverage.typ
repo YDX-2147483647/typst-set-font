@@ -3,7 +3,7 @@
 #let font-configs = (
   (
     link("https://www.unicode.org/glossary/#character_repertoire", smallcaps[*Character Repertoire*]),
-    ("Source Han Serif SC", "Noto Color Emoji", "I.Mahjong-CAN"),
+    ("Source Han Serif SC", "I.Mahjong-CAN"),
   ),
   "Roboto",
   "FandolSong",

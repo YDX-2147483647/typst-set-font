@@ -51,7 +51,7 @@ const calc_font = computed(() => {
     <p class="col-span-2">西文独占字符：</p>
     <FontSample :font="calc_font.latin" :text="sample.latin" />
     <p class="col-span-2">
-      <a href="http://github.com/w3c/clreq/issues/534">中西共用字符：</a>
+      <a href="http://github.com/w3c/clreq/issues/534">中西共用标点：</a>
     </p>
     <FontSample :font="calc_font.both" :text="sample.both" />
     <p class="row-span-2">中文独占</p>
