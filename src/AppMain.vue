@@ -347,12 +347,12 @@ const sample_category = ref<keyof FontSet>("text");
 <template>
   <main>
     <div class="prose dark:prose-invert">
-      <h1 class="pl-8">
+      <h1 class="px-4 lg:pr-0 lg:pl-8">
         Typst<sup class="align-super text-sm">0.13.1</sup> set font
       </h1>
     </div>
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
-      <div class="prose dark:prose-invert pl-8">
+      <div class="prose dark:prose-invert px-4 lg:pr-0 lg:pl-8">
         <section>
           <h2>基础字体设置</h2>
           <p>保证全文字体都稳定正常，不会随机回落或出现豆腐块。</p>
@@ -382,7 +382,7 @@ const sample_category = ref<keyof FontSet>("text");
             <p
               v-for="(options, font_style) in common_config"
               v-bind:key="font_style"
-              class="flex gap-2"
+              class="flex flex-wrap gap-2"
             >
               <span class="inline-block content-center">{{ font_style }}</span>
               <n-button
@@ -467,6 +467,8 @@ const sample_category = ref<keyof FontSet>("text");
                 v-if="'options' in it && it.options"
                 v-model:value="font[category_key][key]"
                 :disabled="it.validate?.disabled"
+                class="overflow-x-auto lg:overflow-x-visible"
+                style="height: calc(var(--n-height) + var(--spacing) * 0.5)"
               >
                 <n-radio-button
                   v-for="{ key, label } in it.options"
@@ -526,7 +528,9 @@ const sample_category = ref<keyof FontSet>("text");
         </section>
       </div>
       <aside class="prose dark:prose-invert">
-        <div class="sticky top-2 max-h-screen overflow-y-auto pr-8">
+        <div
+          class="px-4 lg:sticky lg:top-2 lg:max-h-screen lg:overflow-y-auto lg:pr-8 lg:pl-0"
+        >
           <section>
             <h2>字体测试</h2>
             <n-radio-group v-model:value="sample_category">
@@ -550,7 +554,7 @@ const sample_category = ref<keyof FontSet>("text");
         </div>
       </aside>
     </div>
-    <div class="grid justify-center px-8">
+    <div class="grid justify-center px-4 lg:px-8">
       <div class="prose dark:prose-invert">
         <AddendumSection />
         <SeeAlso />

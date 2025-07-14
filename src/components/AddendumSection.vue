@@ -51,8 +51,10 @@ import { markdownBlock } from "../markdown.ts";
         <tbody>
           <tr>
             <th rowspan="4">
-              <span class="text-nowrap">典型字体</span
-              ><span class="text-nowrap">覆盖情况</span>
+              <span class="text-nowrap">典型</span
+              ><span class="text-nowrap">字体</span
+              ><span class="text-nowrap">覆盖</span
+              ><span class="text-nowrap">情况</span>
             </th>
             <th>仅 Latin 字体</th>
             <td>‼<br />ﬁﬂﬀ</td>
