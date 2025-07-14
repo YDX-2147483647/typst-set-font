@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { NButton, NRadioButton, NRadioGroup } from "naive-ui";
-import { pretty_print_wasm } from "typstyle-core";
 import { computed, ref } from "vue";
 import { calc_advanced, stringify_advanced } from "../fonts/advanced.ts";
 import { stringify_FontSet } from "../fonts/as_typst.ts";
@@ -12,6 +11,15 @@ const { font } = defineProps<{
 }>();
 
 const mode = ref<"markup" | "code">("markup");
+
+// Use a fake `pretty_print` before typstyle is loaded
+const pretty_print = ref<(content: string, width: number) => string>(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (content, _width) => content,
+);
+import("typstyle-core").then(({ pretty_print_wasm }) => {
+  pretty_print.value = pretty_print_wasm;
+});
 
 const remove_prefix = (str: string, prefixes: string[]): string =>
   prefixes.reduce(
@@ -35,9 +43,9 @@ const code = computed(() => {
   }
 
   return mode.value === "markup"
-    ? pretty_print_wasm(raw, 60).trim()
+    ? pretty_print.value(raw, 60).trim()
     : remove_suffix(
-        remove_prefix(pretty_print_wasm("#{" + raw + "}", 62).trim(), [
+        remove_prefix(pretty_print.value("#{" + raw + "}", 62).trim(), [
           "#{\n",
           "#{ ",
         ]),
