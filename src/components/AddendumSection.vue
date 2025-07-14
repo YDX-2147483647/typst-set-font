@@ -6,7 +6,17 @@ import { markdownBlock } from "../markdown.ts";
   <section :class="$style.section">
     <h2>附录：为什么这么复杂？</h2>
     <figure>
-      <img src="/docs/coverage-1.svg" alt="" />
+      <picture>
+        <source
+          media="(prefers-color-scheme: dark)"
+          srcset="/docs/coverage-1.dark.svg"
+        />
+        <source
+          media="(prefers-color-scheme: light)"
+          srcset="/docs/coverage-1.svg"
+        />
+        <img src="/docs/coverage-1.svg" alt="" />
+      </picture>
       <figcaption>典型字体的字符覆盖范围</figcaption>
     </figure>
     <div
@@ -21,8 +31,28 @@ import { markdownBlock } from "../markdown.ts";
     />
     <figure>
       <div class="not-prose grid grid-cols-2">
-        <img src="/docs/coverage-2.svg" alt="Roboto" />
-        <img src="/docs/coverage-3.svg" alt="FandolSong" />
+        <picture>
+          <source
+            media="(prefers-color-scheme: dark)"
+            srcset="/docs/coverage-2.dark.svg"
+          />
+          <source
+            media="(prefers-color-scheme: light)"
+            srcset="/docs/coverage-2.svg"
+          />
+          <img src="/docs/coverage-2.svg" alt="Roboto" />
+        </picture>
+        <picture>
+          <source
+            media="(prefers-color-scheme: dark)"
+            srcset="/docs/coverage-3.dark.svg"
+          />
+          <source
+            media="(prefers-color-scheme: light)"
+            srcset="/docs/coverage-3.svg"
+          />
+          <img src="/docs/coverage-3.svg" alt="FandolSong" />
+        </picture>
       </div>
       <figcaption>典型 Latin 字体（Roboto）与中文字体（FandolSong）</figcaption>
     </figure>
@@ -102,8 +132,28 @@ import { markdownBlock } from "../markdown.ts";
     />
     <figure>
       <div class="not-prose grid grid-cols-2">
-        <img src="/docs/coverage-5.svg" alt="" />
-        <img src="/docs/coverage-6.svg" alt="" />
+        <picture>
+          <source
+            media="(prefers-color-scheme: dark)"
+            srcset="/docs/coverage-5.dark.svg"
+          />
+          <source
+            media="(prefers-color-scheme: light)"
+            srcset="/docs/coverage-5.svg"
+          />
+          <img src="/docs/coverage-5.svg" alt="" />
+        </picture>
+        <picture>
+          <source
+            media="(prefers-color-scheme: dark)"
+            srcset="/docs/coverage-6.dark.svg"
+          />
+          <source
+            media="(prefers-color-scheme: light)"
+            srcset="/docs/coverage-6.svg"
+          />
+          <img src="/docs/coverage-6.svg" alt="" />
+        </picture>
       </div>
       <figcaption>
         先尝试用 Latin 字体渲染，但中西共用标点除外；再补充用中文字体渲染
@@ -126,8 +176,28 @@ import { markdownBlock } from "../markdown.ts";
     />
     <figure>
       <div class="not-prose grid grid-cols-2">
-        <img src="/docs/coverage-2.svg" alt="" />
-        <img src="/docs/coverage-4.svg" alt="" />
+        <picture>
+          <source
+            media="(prefers-color-scheme: dark)"
+            srcset="/docs/coverage-2.dark.svg"
+          />
+          <source
+            media="(prefers-color-scheme: light)"
+            srcset="/docs/coverage-2.svg"
+          />
+          <img src="/docs/coverage-2.svg" alt="" />
+        </picture>
+        <picture>
+          <source
+            media="(prefers-color-scheme: dark)"
+            srcset="/docs/coverage-4.dark.svg"
+          />
+          <source
+            media="(prefers-color-scheme: light)"
+            srcset="/docs/coverage-4.svg"
+          />
+          <img src="/docs/coverage-4.svg" alt="" />
+        </picture>
       </div>
       <figcaption>
         先尝试用 Latin 字体渲染，无例外；再补充用中文字体渲染
@@ -150,8 +220,28 @@ import { markdownBlock } from "../markdown.ts";
     />
     <figure>
       <div class="not-prose grid grid-cols-2">
-        <img src="/docs/coverage-7.svg" alt="" />
-        <img src="/docs/coverage-9.svg" alt="" />
+        <picture>
+          <source
+            media="(prefers-color-scheme: dark)"
+            srcset="/docs/coverage-7.dark.svg"
+          />
+          <source
+            media="(prefers-color-scheme: light)"
+            srcset="/docs/coverage-7.svg"
+          />
+          <img src="/docs/coverage-7.svg" alt="" />
+        </picture>
+        <picture>
+          <source
+            media="(prefers-color-scheme: dark)"
+            srcset="/docs/coverage-9.dark.svg"
+          />
+          <source
+            media="(prefers-color-scheme: light)"
+            srcset="/docs/coverage-9.svg"
+          />
+          <img src="/docs/coverage-9.svg" alt="" />
+        </picture>
       </div>
       <figcaption>
         先用中文字体渲染汉字；再补充用 Latin 字体渲染，不能渲染则放弃
@@ -169,7 +259,9 @@ import { markdownBlock } from "../markdown.ts";
 <style module>
 .section {
   figure {
-    > img {
+    > img,
+    > picture,
+    > picture > img {
       display: block;
       margin-inline: auto;
     }

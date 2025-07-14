@@ -1,5 +1,11 @@
 #pdf.embed("coverage.typ", relationship: "source")
 
+// https://myriad-dreamin.github.io/tinymist/feature/preview.html#label-sys.inputs
+#let theme = sys.inputs.at("theme", default: "light")
+#assert(("light", "dark").contains(theme))
+#set text(fill: white) if theme == "dark"
+#let light-dark(light, dark) = if theme == "light" { light } else { dark }
+
 #let font-configs = (
   (
     link("https://www.unicode.org/glossary/#character_repertoire", smallcaps[*Character Repertoire*]),
@@ -56,10 +62,10 @@
 
 
 #let palette = (
-  latin: blue,
+  latin: light-dark(blue, blue.lighten(20%)),
   han: orange,
-  punctuation: purple,
-  letter-number: green.darken(10%),
+  punctuation: light-dark(purple, purple.lighten(10%)),
+  letter-number: light-dark(green.darken(10%), green),
 )
 
 #let r = 5em

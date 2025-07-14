@@ -26,3 +26,4 @@ build-public: download-fonts
   
   # SVGs will be included in the web page
   typst compile docs/coverage.typ "public/docs/coverage-{p}.svg" --pages 1-7,9
+  typst compile docs/coverage.typ "public/docs/coverage-{p}.dark.svg" --pages 1-7,9 --input theme=dark

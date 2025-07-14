@@ -1,5 +1,15 @@
 # typst-set-font
 
+## Development
+
+Install typst and run the following.
+
+```shell
+pnpm install
+pnpm just build-public
+pnpm dev
+```
+
 ## References
 
 <!-- The following are used by SeeAlso.vue -->
