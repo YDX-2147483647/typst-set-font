@@ -10,6 +10,7 @@ export default defineConfig({
   base: "./", // https://vite.dev/guide/build.html#relative-base
   build: {
     sourcemap: true,
+    chunkSizeWarningLimit: 600,
   },
   css: {
     postcss: {
