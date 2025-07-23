@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { execFile as _execFile } from "node:child_process";
+import { execFile as _execFile, spawnSync } from "node:child_process";
 import console from "node:console";
 import { createHash } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -142,6 +142,18 @@ const FONTS: Font[] = [
     ],
   },
   {
+    font_name: "Zhuque Fangsong (technical preview)",
+    files: [
+      {
+        name: "ZhuqueFangsong-Regular.ttf",
+        hash: "558c62730844fe54ba220146ed62f859d4e2880188d92d985f8921c6e3743bc4",
+        url: [
+          "https://github.com/TrionesType/zhuque/releases/download/v0.212/ZhuqueFangsong-v0.212.zip",
+        ],
+      },
+    ],
+  },
+  {
     font_name: "TeX Gyre Termes",
     files: [
       {
@@ -261,31 +273,43 @@ for (const { font_name, files } of FONTS) {
         if (!response.ok) {
           throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
         }
-        const buffer = await response.arrayBuffer();
+        const array_buffer = await response.arrayBuffer();
+        const buffer = url.endsWith(".zip")
+          ? Buffer.from(
+              spawnSync("funzip", [], {
+                input: Buffer.from(array_buffer),
+                maxBuffer: 16 * 1024 * 1024, // 16 MiB
+              }).stdout,
+            )
+          : Buffer.from(array_buffer);
+
         if (spec.hash !== null) {
           const hasher = createHash("sha256");
-          hasher.update(Buffer.from(buffer));
+          hasher.update(buffer);
           const hash = hasher.digest("hex");
           if (hash !== spec.hash) {
             throw new Error(
-              `Hash mismatch for ${spec.name}: expected ${spec.hash}, got ${hash}`,
+              `Hash mismatch for ${name}: expected ${spec.hash}, got ${hash}` +
+                (buffer.length < 1024 * 500
+                  ? `\n\nContent (${buffer.length}):\n\n${buffer.toString()}`
+                  : ""),
             );
           }
         }
-        const filePath = path.join(FONTS_DIR, name);
 
-        await writeFile(filePath, Buffer.from(buffer));
+        const filePath = path.join(FONTS_DIR, name);
+        await writeFile(filePath, buffer);
         console.log(
           `  ✓ Downloaded${spec.hash !== null ? " and verified" : " but skipped hash check"}.`,
         );
         completed = true;
         break;
       } catch (error) {
-        console.error(`Error downloading ${spec.name} from ${url}:`, error);
+        console.error(`Error downloading ${name} from ${url}:`, error);
       }
     }
     if (!completed) {
-      throw new Error(`Failed to download ${spec.name} after trying all URLs.`);
+      throw new Error(`Failed to download ${name} after trying all URLs.`);
     }
   }
 }
