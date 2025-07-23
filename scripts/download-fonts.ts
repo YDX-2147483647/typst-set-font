@@ -14,8 +14,8 @@ interface Font {
   files: {
     /** Download name, default to the last part of URL */
     name?: string;
-    /** SHA256 */
-    hash: string;
+    /** SHA256; setting to `null` to skip check */
+    hash: string | null;
     /** Primary download URL and fallback URLs */
     url: string[];
   }[];
@@ -188,6 +188,42 @@ const FONTS: Font[] = [
       },
     ],
   },
+  {
+    font_name: "SimSun",
+    files: [
+      {
+        hash: null,
+        url: ["https://github.com/jiaxiaochu/font/raw/master/simsun.ttc"],
+      },
+    ],
+  },
+  {
+    font_name: "SimHei",
+    files: [
+      {
+        hash: null,
+        url: ["https://github.com/jiaxiaochu/font/raw/master/simhei.ttf"],
+      },
+    ],
+  },
+  {
+    font_name: "FangSong",
+    files: [
+      {
+        hash: null,
+        url: ["https://github.com/jiaxiaochu/font/raw/master/simfang.ttf"],
+      },
+    ],
+  },
+  {
+    font_name: "KaiTi",
+    files: [
+      {
+        hash: null,
+        url: ["https://github.com/jiaxiaochu/font/raw/master/simkai.ttf"],
+      },
+    ],
+  },
 ];
 
 const ROOT_DIR = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
@@ -226,18 +262,22 @@ for (const { font_name, files } of FONTS) {
           throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
         }
         const buffer = await response.arrayBuffer();
-        const hasher = createHash("sha256");
-        hasher.update(Buffer.from(buffer));
-        const hash = hasher.digest("hex");
-        if (hash !== spec.hash) {
-          throw new Error(
-            `Hash mismatch for ${spec.name}: expected ${spec.hash}, got ${hash}`,
-          );
+        if (spec.hash !== null) {
+          const hasher = createHash("sha256");
+          hasher.update(Buffer.from(buffer));
+          const hash = hasher.digest("hex");
+          if (hash !== spec.hash) {
+            throw new Error(
+              `Hash mismatch for ${spec.name}: expected ${spec.hash}, got ${hash}`,
+            );
+          }
         }
         const filePath = path.join(FONTS_DIR, name);
 
         await writeFile(filePath, Buffer.from(buffer));
-        console.log(`  ✓ Downloaded and verified.`);
+        console.log(
+          `  ✓ Downloaded${spec.hash !== null ? " and verified" : " but skipped hash check"}.`,
+        );
         completed = true;
         break;
       } catch (error) {
