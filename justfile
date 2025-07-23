@@ -30,4 +30,5 @@ build-assets: download-fonts && build-font-samples
 
 [private]
 build-font-samples:
+  mkdir --parents src/assets
   node scripts/build_font_samples.ts src/assets/font_samples.json
