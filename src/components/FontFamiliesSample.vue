@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import font_samples_url from "../assets/font_samples.json?url";
+import { text_samples } from "../fixtures.ts";
+import { TYPST_FONT } from "../fonts/const.ts";
 import { resolve_FontFamilies } from "../fonts/resolve.ts";
-import {
-  FallbackRule,
-  FontSet,
-  TYPST_FONT,
-  type FontFamilies,
-} from "../fonts/types.ts";
+import { FallbackRule, FontSet, type FontFamilies } from "../fonts/types.ts";
 import FontSample from "./FontSample.vue";
 
 const { font, category } = defineProps<{
@@ -14,14 +12,11 @@ const { font, category } = defineProps<{
   category: keyof FontSet;
 }>();
 
-const sample = {
-  latin: "Aa09,.?!",
-  both: "—…“”‘’·",
-  han: {
-    punct: "，、。？！",
-    ideo: "永体體固",
-  },
-};
+/** A lazy-loaded map from font families to SVG samples */
+const font_samples = ref<Record<string, typeof text_samples> | null>(null);
+fetch(font_samples_url)
+  .then((r) => r.text())
+  .then((data) => (font_samples.value = JSON.parse(data)));
 
 const calc_font = computed(() => {
   const rule = font.rule;
@@ -42,6 +37,18 @@ const calc_font = computed(() => {
     },
   };
 });
+
+const get_image = computed(
+  () =>
+    (font: string | null): typeof text_samples | null => {
+      const samples = font_samples.value;
+      if (samples === null || font === null) {
+        return null;
+      } else {
+        return samples[font] ?? null;
+      }
+    },
+);
 </script>
 
 <template>
@@ -49,15 +56,31 @@ const calc_font = computed(() => {
     class="not-prose mx-auto my-4 grid grid-cols-[auto_auto_1fr] items-center gap-3 text-end lg:max-w-4/5"
   >
     <p class="col-span-2">西文独占字符：</p>
-    <FontSample :font="calc_font.latin" :text="sample.latin" />
+    <FontSample
+      :font="calc_font.latin"
+      :text="text_samples.latin"
+      :svg="get_image(calc_font.latin)?.latin"
+    />
     <p class="col-span-2">
       <a href="http://github.com/w3c/clreq/issues/534">中西共用标点：</a>
     </p>
-    <FontSample :font="calc_font.both" :text="sample.both" />
+    <FontSample
+      :font="calc_font.both"
+      :text="text_samples.both"
+      :svg="get_image(calc_font.both)?.both"
+    />
     <p class="row-span-2">中文独占</p>
     <p>标点：</p>
-    <FontSample :font="calc_font.han.punct" :text="sample.han.punct" />
+    <FontSample
+      :font="calc_font.han.punct"
+      :text="text_samples.han.punct"
+      :svg="get_image(calc_font.han.punct)?.han.punct"
+    />
     <p>汉字：</p>
-    <FontSample :font="calc_font.han.ideo" :text="sample.han.ideo" />
+    <FontSample
+      :font="calc_font.han.ideo"
+      :text="text_samples.han.ideo"
+      :svg="get_image(calc_font.han.ideo)?.han.ideo"
+    />
   </div>
 </template>

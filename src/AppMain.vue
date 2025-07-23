@@ -13,7 +13,9 @@ import AddendumSection from "./components/AddendumSection.vue";
 import FontFamiliesSample from "./components/FontFamiliesSample.vue";
 import SeeAlso from "./components/SeeAlso.vue";
 import StringifyTypstCode from "./components/StringifyTypstCode.vue";
+import { common_han_fonts } from "./fixtures.ts";
 import { calc_advanced } from "./fonts/advanced.ts";
+import { TYPST_FONT } from "./fonts/const.ts";
 import { resolve_FontFamilies } from "./fonts/resolve.ts";
 import {
   FallbackRule,
@@ -21,7 +23,6 @@ import {
   FontSet,
   FontSet_empty,
   FontSetAdvanced,
-  TYPST_FONT,
 } from "./fonts/types.ts";
 import { markdown, type Markdown } from "./markdown.ts";
 
@@ -45,41 +46,6 @@ function build_validator(
   };
 }
 
-const common_config: Record<
-  string,
-  { label: string; value: string; available_in_typst_app?: boolean }[]
-> = {
-  宋体: [
-    {
-      label: "思源 Noto CJK",
-      value: "Noto Serif CJK SC",
-      available_in_typst_app: true,
-    },
-    { label: "思源 Source Han", value: "Source Han Serif" },
-    { label: "中易", value: "SimSun" },
-    { label: "Fandol", value: "FandolSong" },
-  ],
-  黑体: [
-    {
-      label: "思源 Noto CJK",
-      value: "Noto Sans CJK SC",
-      available_in_typst_app: true,
-    },
-    { label: "思源 Source Han", value: "Source Han Sans" },
-    { label: "中易", value: "SimHei" },
-    { label: "Fandol", value: "FandolHei" },
-  ],
-  楷体: [
-    { label: "中易", value: "KaiTi" },
-    { label: "Fandol", value: "FandolKai" },
-    { label: "霞鹜", value: "LXGW WenKai GB" },
-  ],
-  仿宋: [
-    { label: "中易", value: "FangSong" },
-    { label: "Fandol", value: "FandolFang R" },
-    { label: "朱雀", value: "Zhuque Fangsong (technical preview)" },
-  ],
-};
 const common_han = ref("");
 
 const config = computed<
@@ -380,7 +346,7 @@ const sample_category = ref<keyof FontSet>("text");
               预装；其余字体需要手动上传才能使用。
             </p>
             <p
-              v-for="(options, font_style) in common_config"
+              v-for="(options, font_style) in common_han_fonts"
               v-bind:key="font_style"
               class="flex flex-wrap gap-2"
             >

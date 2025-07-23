@@ -31,7 +31,7 @@ jobs:
             fonts-${{ hashFiles('scripts/download-fonts.ts') }}
             fonts-
 
-      - run: pnpm just build-public
+      - run: pnpm just build-assets
       - run: pnpm build
       - id: deployment
         uses: actions/upload-pages-artifact@v3

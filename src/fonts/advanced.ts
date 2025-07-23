@@ -4,8 +4,8 @@ import {
   FontSet,
   FontSetAdvanced,
   FontSetResolved,
-  TYPST_FONT,
 } from "./types.ts";
+import { TYPST_FONT } from "./const.ts";
 
 // TODO: Support emph and strong.
 // TODO: Support FontSetPersonal.

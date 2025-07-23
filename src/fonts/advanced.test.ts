@@ -5,10 +5,10 @@ import {
   FontFamilies_empty,
   FontFamilies_from,
   FontSet_empty,
-  TYPST_FONT,
   type FontSetAdvanced,
   type MathFontFamilies,
 } from "./types.ts";
+import { TYPST_FONT } from "./const.ts";
 
 describe("calc_advanced", () => {
   describe("when text font is null", () => {

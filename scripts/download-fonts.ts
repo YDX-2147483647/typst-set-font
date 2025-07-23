@@ -59,6 +59,30 @@ const FONTS: Font[] = [
     ],
   },
   {
+    font_name: "Noto Serif CJK SC",
+    files: [
+      {
+        hash: "2a2eae2628df83556c54018c41e20fa532c1b862c5256ae8b3f23feb918d12ca",
+        url: [
+          "https://github.com/notofonts/noto-cjk/raw/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Serif/OTF/SimplifiedChinese/NotoSerifCJKsc-Regular.otf",
+          "https://github.com/notofonts/noto-cjk/raw/main/Serif/OTF/SimplifiedChinese/NotoSerifCJKsc-Regular.otf",
+        ],
+      },
+    ],
+  },
+  {
+    font_name: "Noto Sans CJK SC",
+    files: [
+      {
+        hash: "2c76254f6fc379fddfce0a7e84fb5385bb135d3e399294f6eeb6680d0365b74b",
+        url: [
+          "https://github.com/notofonts/noto-cjk/raw/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
+          "https://github.com/notofonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf",
+        ],
+      },
+    ],
+  },
+  {
     font_name: "Roboto",
     files: [
       {

@@ -1,6 +1,7 @@
 # Generated files
 /fonts/
 /public/docs/
+/src/assets/font_samples.json
 
 # Logs
 logs

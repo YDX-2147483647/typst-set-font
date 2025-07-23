@@ -46,9 +46,11 @@ jobs:
             fonts-${{ hashFiles('scripts/download-fonts.ts') }}
             fonts-
 
-      - run: pnpm just build-public
+      - run: pnpm just build-assets
       - uses: actions/upload-artifact@v4
         with:
-          name: public-docs
-          path: public/docs/*
+          name: public-assets
+          path: |
+            public/docs/
+            src/assets/font_samples.json
       - run: pnpm build

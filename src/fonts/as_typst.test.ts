@@ -7,8 +7,8 @@ import {
   type MathFontFamilies,
   MathFontFamilies_from,
   type Resolved,
-  TYPST_FONT,
 } from "./types.ts";
+import { TYPST_FONT } from "./const.ts";
 
 describe("stringify_FontFamilies", () => {
   describe("same font for latin and han", () => {

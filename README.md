@@ -6,7 +6,7 @@ Install typst and run the following.
 
 ```shell
 pnpm install
-pnpm just build-public
+pnpm just build-assets
 pnpm dev
 ```
 

@@ -9,9 +9,9 @@ import {
   FontSet,
   FontSetResolved,
   MathFontFamilies,
-  TYPST_FONT,
   type Resolved,
 } from "./types.ts";
+import { TYPST_FONT } from "./const.ts";
 
 /**
  * Resolve `FontFamilies` as in typst.
