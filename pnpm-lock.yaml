@@ -8,15 +8,15 @@ importers:
 
   .:
     dependencies:
+      '@typstyle/typstyle-wasm-bundler':
+        specifier: ^0.13.16
+        version: 0.13.16
       marked:
         specifier: ^16.0.0
         version: 16.0.0
       tailwindcss:
         specifier: ^4.1.11
         version: 4.1.11
-      typstyle-core:
-        specifier: ^0.13.9
-        version: 0.13.9
       vue:
         specifier: ^3.4.0
         version: 3.5.17(typescript@5.8.3)
@@ -792,6 +792,9 @@ packages:
   '@typescript-eslint/visitor-keys@8.36.0':
     resolution: {integrity: sha512-vZrhV2lRPWDuGoxcmrzRZyxAggPL+qp3WzUrlZD+slFueDiYHxeBa34dUXPuC0RmGKzl4lS5kFJYvKCq9cnNDA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typstyle/typstyle-wasm-bundler@0.13.16':
+    resolution: {integrity: sha512-snDu0iQ7b0nYbGUcULxw2yte+4CK4BcEJTNmrEhpYhzYFcuWmv29CQyBPM1chwo7VHVNWVEeJSL/l3lojhsVPQ==}
 
   '@vitejs/plugin-vue@6.0.0':
     resolution: {integrity: sha512-iAliE72WsdhjzTOp2DtvKThq1VBC4REhwRcaA+zPAAph6I+OQhUXv+Xu2KS7ElxYtb7Zc/3R30Hwv1DxEo7NXQ==}
@@ -1826,9 +1829,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typstyle-core@0.13.9:
-    resolution: {integrity: sha512-QbULFlSFREUaq80UxyqPCsvh7PlJfLEWSFGGLS2EilEiXv+CgTkufIcuTCT1CQtsLwspImTTNWRWSCp5MgBeKA==}
-
   undici-types@7.8.0:
     resolution: {integrity: sha512-9UJ2xGDvQ43tYyVMpuHlsgApydB8ZKfVYTsLDhXkFL/6gfkp+U8xTGdh8pMJv1SpZna0zxG1DwsKZsreLbXBxw==}
 
@@ -2559,6 +2559,8 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.36.0
       eslint-visitor-keys: 4.2.1
+
+  '@typstyle/typstyle-wasm-bundler@0.13.16': {}
 
   '@vitejs/plugin-vue@6.0.0(vite@6.3.5(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1))(vue@3.5.17(typescript@5.8.3))':
     dependencies:
@@ -3548,8 +3550,6 @@ snapshots:
       - supports-color
 
   typescript@5.8.3: {}
-
-  typstyle-core@0.13.9: {}
 
   undici-types@7.8.0: {}
 

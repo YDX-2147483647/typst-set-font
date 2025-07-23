@@ -12,13 +12,32 @@ const { font } = defineProps<{
 
 const mode = ref<"markup" | "code">("markup");
 
-// Use a fake `pretty_print` before typstyle is loaded
-const pretty_print = ref<(content: string, width: number) => string>(
+// Use a fake `format_typst` before typstyle is loaded
+const format_typst = ref<(text: string, mode: "markup" | "code") => string>(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (content, _width) => content,
+  (text, _mode) => text,
 );
-import("typstyle-core").then(({ pretty_print_wasm }) => {
-  pretty_print.value = pretty_print_wasm;
+import("@typstyle/typstyle-wasm-bundler").then(({ format }) => {
+  const base_width = 60;
+  format_typst.value = (text, mode) => {
+    if (mode === "markup") {
+      return format(text, { max_width: base_width }).trim();
+    } else {
+      const markup = format("#{" + text + "}", {
+        max_width: base_width + 2, // Count the 2-space indent
+      }).trim();
+
+      const code = remove_suffix(remove_prefix(markup, ["#{\n", "#{ "]), [
+        "\n}",
+        " }",
+      ])
+        .split("\n")
+        .map((line) => remove_prefix(line, ["  "]))
+        .join("\n");
+
+      return code;
+    }
+  };
 });
 
 const remove_prefix = (str: string, prefixes: string[]): string =>
@@ -42,18 +61,7 @@ const code = computed(() => {
     return "// 未设置字体";
   }
 
-  return mode.value === "markup"
-    ? pretty_print.value(raw, 60).trim()
-    : remove_suffix(
-        remove_prefix(pretty_print.value("#{" + raw + "}", 62).trim(), [
-          "#{\n",
-          "#{ ",
-        ]),
-        ["\n}", " }"],
-      )
-        .split("\n")
-        .map((line) => remove_prefix(line, ["  "]))
-        .join("\n");
+  return format_typst.value(raw, mode.value);
 });
 
 const copy = () => {

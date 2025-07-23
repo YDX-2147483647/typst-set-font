@@ -12,9 +12,9 @@
     "just": "just"
   },
   "dependencies": {
+    "@typstyle/typstyle-wasm-bundler": "^0.13.16",
     "marked": "^16.0.0",
     "tailwindcss": "^4.1.11",
-    "typstyle-core": "^0.13.9",
     "vue": "^3.4.0"
   },
   "devDependencies": {
