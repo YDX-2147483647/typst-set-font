@@ -16,17 +16,49 @@ import StringifyTypstCode from "./components/StringifyTypstCode.vue";
 import { common_han_fonts } from "./fixtures.ts";
 import { calc_advanced } from "./fonts/advanced.ts";
 import { TYPST_FONT } from "./fonts/const.ts";
-import { resolve_FontFamilies } from "./fonts/resolve.ts";
+import { resolve_FontFamilies, resolve_FontSet } from "./fonts/resolve.ts";
 import {
   FallbackRule,
   FontFamilies,
   FontSet,
   FontSet_empty,
   FontSetAdvanced,
+  MathFontFamilies,
 } from "./fonts/types.ts";
 import { markdown, type Markdown } from "./markdown.ts";
 
 const font: FontSetAdvanced = reactive(FontSet_empty());
+
+/** A sorted list of all used fonts */
+const used_fonts = computed<{ value: string; homepage?: string | undefined }[]>(
+  () => {
+    const ignored = [
+      undefined,
+      null,
+      ...Object.values(TYPST_FONT),
+      TYPST_FONT.math.replace(/ Math$/, ""),
+    ];
+    const known = Object.values(common_han_fonts).flat();
+
+    const resolved = resolve_FontSet(font);
+    const used = Array.from(
+      new Set(
+        [resolved.text, resolved.math, resolved.code]
+          .flatMap((f) => [
+            f?.han,
+            f?.latin,
+            "math" in (f ?? {}) ? (f as MathFontFamilies).math : undefined,
+          ])
+          .filter((x) => !ignored.includes(x)) as string[],
+      ),
+    ).sort();
+
+    return used.map((value) => ({
+      value,
+      homepage: known.find((c) => c.value === value)?.homepage,
+    }));
+  },
+);
 
 function build_validator(
   fn: () => {
@@ -495,7 +527,7 @@ const sample_category = ref<keyof FontSet>("text");
       </div>
       <aside class="prose dark:prose-invert">
         <div
-          class="px-4 lg:sticky lg:top-2 lg:max-h-screen lg:overflow-y-auto lg:pr-8 lg:pl-0"
+          class="px-4 lg:sticky lg:top-2 lg:max-h-screen lg:overflow-y-auto lg:pr-8 lg:pb-8 lg:pl-0"
         >
           <section>
             <h2>字体测试</h2>
@@ -516,6 +548,21 @@ const sample_category = ref<keyof FontSet>("text");
           <section>
             <h2>Typst 代码</h2>
             <StringifyTypstCode :font="font" />
+            <details v-if="used_fonts.length > 0" open>
+              <summary>所需字体清单</summary>
+              <ul>
+                <li
+                  v-for="{ value, homepage } in used_fonts"
+                  v-bind:key="value"
+                >
+                  <a v-if="homepage" :href="homepage" target="_blank">{{
+                    value
+                  }}</a>
+                  <span v-else>{{ value }}</span>
+                </li>
+              </ul>
+              <p>（未含 Typst 内置字体）</p>
+            </details>
           </section>
         </div>
       </aside>
