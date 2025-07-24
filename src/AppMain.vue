@@ -259,11 +259,28 @@ const config = computed<
   math: {
     label: "数学",
     description:
-      '数学指 [math.equation](https://typst.app/docs/reference/math/equation/)。以下“数学排版”指其中变量、分式、积分号等，而“中文”“Latin”指其中用 ""包裹起来的文本。',
+      '数学指 [math.equation](https://typst.app/docs/reference/math/equation/)。以下“数学排版”指其中变量、分式、积分号等，而“中文”“Latin”指其中用 "" 包裹起来的文本。',
     data: {
       math: {
         label: "数学排版",
         placeholder: `留空表示默认，即 ${TYPST_FONT.math}`,
+
+        validate: build_validator(() => {
+          const f = resolve_FontFamilies(font.math, "math");
+          if (f === null) {
+            return { status: "success" };
+          }
+
+          if (
+            !f.math.toLocaleLowerCase().includes(" Math".toLocaleLowerCase())
+          ) {
+            return {
+              status: "warning",
+              feedback: "需要字体支持 OpenType 数学特性，名称通常含“Math”",
+            };
+          }
+          return { status: "success" };
+        }),
       },
       latin: {
         label: "Latin 字体",
@@ -291,6 +308,20 @@ const config = computed<
               feedback:
                 "选用数学字体用于文本，可能[一同替换数学排版的字体](https://forum.typst.app/t/what-is-the-designed-behaviour-of-font-covers-in-math-equations/5006)，建议删除“Math”后缀或换成“Sans”或“Serif”",
             };
+          }
+          if (f.latin !== f.math) {
+            const math = f.math.toLocaleLowerCase().replace(/\s+math$/, "");
+            const latin = f.latin
+              .toLocaleLowerCase()
+              .replace(/\s+(sans|serif)$/, "");
+
+            if (!math.startsWith(latin) && !latin.startsWith(math)) {
+              return {
+                status: "success",
+                feedback:
+                  'Latin 与数学排版字体不配套，"" 内外的字母未必协调，请酌情使用；[预计下一版 Typst 会改进](https://github.com/typst/typst/pull/6365)',
+              };
+            }
           }
           return { status: "success" };
         }),

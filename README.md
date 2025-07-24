@@ -1,5 +1,10 @@
 # typst-set-font
 
+Setting Chinese font in Typst. 设置 Typst 中文字体。
+
+[![Check](https://github.com/YDX-2147483647/typst-set-font/actions/workflows/check.yml/badge.svg)](https://github.com/YDX-2147483647/typst-set-font/actions/workflows/check.yml)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fydx-2147483647.github.io%2Ftypst-set-font%2F&label=Website)](https://ydx-2147483647.github.io/typst-set-font/)
+
 ## Development
 
 Install typst and run the following.
@@ -36,3 +41,7 @@ Websites:
 
 - [Typstで日本語文字と英数字のフォントを別々に指定する](https://zenn.dev/mkpoli/articles/6234c1d2a595bd)
   by mkpoli
+
+另可参考本项目的核心代码与测试用例：
+
+- [`src/fonts/` · YDX-2147483647/typst-set-font](https://github.com/YDX-2147483647/typst-set-font/tree/main/src/fonts)
