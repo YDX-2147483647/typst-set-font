@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { markdownBlock } from "../markdown.ts";
+
+function withBase(path: string): string {
+  // https://github.com/vuejs/vitepress/blob/51f7fda0bde018888f1287ed35e29ef8421fb86d/src/client/app/utils.ts#L13-L27
+  return `${import.meta.env.BASE_URL}${path}`.replace(/\/+/g, "/");
+}
 </script>
 
 <template>
@@ -249,9 +254,9 @@ import { markdownBlock } from "../markdown.ts";
     </figure>
     <p>
       关于字体覆盖的更多例子可参考
-      <a href="/docs/coverage.pdf">coverage.pdf</a
+      <a :href="withBase('/docs/coverage.pdf')">coverage.pdf</a
       >，关于正则表达式的更多例子可参考
-      <a href="/docs/regex.pdf">regex.pdf</a>。
+      <a :href="withBase('/docs/regex.pdf')">regex.pdf</a>。
     </p>
   </section>
 </template>
