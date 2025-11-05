@@ -31,7 +31,8 @@ export enum FallbackRule {
   MathFirst,
   /**
    * The text mainly consists of Latin paragraphs, interspersed with some Chinese ideograph.
-   * Therefore, shared punctuations should be rendered in the Latin font,
+   * Therefore, shared punctuations should be rendered in the Latin font
+   * (or the math font in math equations),
    * and the result of other Han punctuations does not matter.
    *
    * Nevertheless, this rule may cause punctuation marks to become tofus,

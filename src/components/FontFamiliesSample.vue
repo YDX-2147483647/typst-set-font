@@ -43,8 +43,11 @@ const calc_font = computed(() => {
   return {
     latin: resolved?.latin ?? typst_fallback,
     both:
-      (rule === FallbackRule.HanFirst ? resolved?.han : resolved?.latin) ??
-      typst_fallback,
+      (rule === FallbackRule.HanFirst
+        ? resolved?.han
+        : category !== "math" || rule === FallbackRule.LatinFirst
+          ? resolved?.latin
+          : (resolved as MathFontFamilies)?.math) ?? typst_fallback,
     han: {
       punct:
         rule === FallbackRule.HanOnlyIdeographs

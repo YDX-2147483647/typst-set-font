@@ -101,8 +101,10 @@ export function calculate_MathFontFamilies(
       // Such font does not exist as of 2025, but we have to generate something
       if ([FallbackRule.HanFirst, FallbackRule.MathFirst].includes(font.rule)) {
         return [math, latin];
-      } else {
+      } else if (font.rule === FallbackRule.LatinFirst) {
         return [{ name: latin, covers: regex_latin_and_shared }, math, latin];
+      } else {
+        return [{ name: latin, covers: regex_latin }, math, latin];
       }
     } else if (latin === han) {
       // Case 2.1: math ≠ latin = han
