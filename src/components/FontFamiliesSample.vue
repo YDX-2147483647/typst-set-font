@@ -3,14 +3,28 @@ import { computed, ref } from "vue";
 import font_samples_url from "../assets/font_samples.json?url";
 import { text_samples } from "../fixtures.ts";
 import { TYPST_FONT } from "../fonts/const.ts";
-import { resolve_FontFamilies } from "../fonts/resolve.ts";
-import { FallbackRule, FontSet, type FontFamilies } from "../fonts/types.ts";
+import {
+  resolve_FontFamilies,
+  resolve_MathFontFamilies,
+} from "../fonts/resolve.ts";
+import {
+  FallbackRule,
+  FontSet,
+  type FontFamilies,
+  type MathFontFamilies,
+} from "../fonts/types.ts";
 import FontSample from "./FontSample.vue";
 
-const { font, category } = defineProps<{
-  font: FontFamilies;
-  category: keyof FontSet;
-}>();
+const { font, category } = defineProps<
+  | {
+      font: FontFamilies;
+      category: keyof Omit<FontSet, "math">;
+    }
+  | {
+      font: MathFontFamilies;
+      category: "math";
+    }
+>();
 
 /** A lazy-loaded map from font families to SVG samples */
 const font_samples = ref<Record<string, typeof text_samples> | null>(null);
@@ -20,7 +34,10 @@ fetch(font_samples_url)
 
 const calc_font = computed(() => {
   const rule = font.rule;
-  const resolved = resolve_FontFamilies(font, category);
+  const resolved =
+    category !== "math"
+      ? resolve_FontFamilies(font, category)
+      : resolve_MathFontFamilies(font);
   const typst_fallback = TYPST_FONT[category];
 
   return {

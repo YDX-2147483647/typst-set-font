@@ -14,7 +14,7 @@ describe("stringify_FontSet with FontSetAdvanced", () => {
         text: {
           latin: "Arial",
           han: "SimSun",
-          rule: FallbackRule.HanFirst,
+          rule: FallbackRule.HanFirst as const,
         },
         math: MathFontFamilies_from("Fira Math"),
         code: FontFamilies_from("Fira Mono"),

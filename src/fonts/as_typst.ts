@@ -10,6 +10,7 @@ import {
   type FontFamilies,
   type FontName,
   type MathFontFamilies,
+  type NonMathFallbackRule,
   type Resolved,
 } from "./types.ts";
 
@@ -21,41 +22,131 @@ class TypstCode {
 }
 const typst_code = (repr: string) => new TypstCode(repr);
 
-const FallbackRule_fn = new Map<
-  FallbackRule,
-  (font: {
-    han: FontName;
-    latin: FontName;
-  }) => (string | { name: string; covers: TypstCode | string })[]
->([
-  [
-    FallbackRule.HanFirst,
-    ({ han, latin }) => [{ name: latin, covers: "latin-in-cjk" }, han],
+type TypstFontList = (string | { name: string; covers: TypstCode | string })[];
+
+/** Non-math font fallback rules when han ≠ latin */
+const NonMathFallbackRule_fn: Record<
+  NonMathFallbackRule,
+  (font: { han: FontName; latin: FontName }) => TypstFontList
+> = {
+  [FallbackRule.HanFirst]: ({ han, latin }) => [
+    { name: latin, covers: "latin-in-cjk" },
+    han,
   ],
-  [FallbackRule.LatinFirst, ({ han, latin }) => [latin, han]],
-  [
-    FallbackRule.HanOnlyIdeographs,
-    ({ han, latin }) => [
-      { name: han, covers: typst_code(`regex("\\p{Han}")`) },
-      latin,
-    ],
+  [FallbackRule.LatinFirst]: ({ han, latin }) => [latin, han],
+  [FallbackRule.HanOnlyIdeographs]: ({ han, latin }) => [
+    { name: han, covers: typst_code(`regex("\\p{Han}")`) },
+    latin,
   ],
-]);
+};
 
 export function stringify_FontFamilies(font: Resolved<FontFamilies>): string {
   const font_list =
     font.latin === font.han
       ? [font.latin]
-      : FallbackRule_fn.get(font.rule)!(font);
+      : NonMathFallbackRule_fn[font.rule](font);
 
-  if ("math" in font) {
-    const math = (font as Resolved<MathFontFamilies>).math;
-    // Ignore if duplicated
-    if (math !== font_list[font_list.length - 1]) {
-      font_list.push(math);
+  return stringify_TypstCode(font_list);
+}
+
+/** This is an internal function. It is exported only for unit tests. */
+export function calculate_MathFontFamilies(
+  font: Resolved<MathFontFamilies>,
+): TypstFontList {
+  const { math, han, latin } = font;
+  if (math === latin) {
+    if (math === han) {
+      // Case 1.1: math = latin = han
+      return [math];
+    } else {
+      // Case 1.2: math = latin ≠ han
+      if (font.rule === FallbackRule.HanFirst) {
+        return [
+          { name: math, covers: "latin-in-cjk" },
+          { name: han, covers: typst_code(`regex(".")`) },
+          math,
+        ];
+      } else {
+        return [math, han];
+      }
+    }
+  } else {
+    /**
+     * Punctuation marks shared by Latin and Han.
+     *
+     * Latin-1 Supplement:
+     *   B7 MIDDLE DOT
+     * General Punctuation:
+     *   2013 EN DASH
+     *   2014 EM DASH
+     *   2018 LEFT SINGLE QUOTATION MARK
+     *   2019 RIGHT SINGLE QUOTATION MARK
+     *   201C LEFT DOUBLE QUOTATION MARK
+     *   201D RIGHT DOUBLE QUOTATION MARK
+     *   2025 TWO DOT LEADER
+     *   2026 HORIZONTAL ELLIPSIS
+     *   2027 HYPHENATION POINT
+     * Supplemental Punctuation:
+     *   2E3A TWO-EM DASH
+     */
+    const shared = "·–—‘’“”‥…‧⸺";
+    const regex_latin = typst_code(`regex("[.\\d\\p{Latin}]")`);
+    const regex_shared = typst_code(`regex("[${shared}]")`);
+    const regex_latin_and_shared = typst_code(
+      `regex("[.\\d\\p{Latin}${shared}]")`,
+    );
+
+    if (math === han) {
+      // Case 2.0: math = han ≠ latin
+      // Such font does not exist as of 2025, but we have to generate something
+      if ([FallbackRule.HanFirst, FallbackRule.MathFirst].includes(font.rule)) {
+        return [math, latin];
+      } else {
+        return [{ name: latin, covers: regex_latin_and_shared }, math, latin];
+      }
+    } else if (latin === han) {
+      // Case 2.1: math ≠ latin = han
+      if (
+        [FallbackRule.LatinFirst, FallbackRule.HanFirst].includes(font.rule)
+      ) {
+        return [{ name: han, covers: regex_latin_and_shared }, math, han];
+      } else {
+        return [math, han];
+      }
+    } else {
+      // Case 2.2: math ≠ latin ≠ han ≠ math
+      const rule: Record<FallbackRule, TypstFontList> = {
+        [FallbackRule.MathFirst]: [
+          { name: latin, covers: regex_latin },
+          math,
+          han,
+        ],
+        [FallbackRule.HanFirst]: [
+          { name: latin, covers: regex_latin },
+          { name: han, covers: regex_shared },
+          math,
+          han,
+        ],
+        [FallbackRule.LatinFirst]: [
+          { name: latin, covers: regex_latin_and_shared },
+          math,
+          han,
+        ],
+        [FallbackRule.HanOnlyIdeographs]: [
+          { name: latin, covers: regex_latin },
+          { name: han, covers: typst_code(`regex("\\p{Han}")`) },
+          math,
+        ],
+      };
+      return rule[font.rule];
     }
   }
+}
 
+export function stringify_MathFontFamilies(
+  font: Resolved<MathFontFamilies>,
+): string {
+  const font_list = calculate_MathFontFamilies(font);
   return stringify_TypstCode(font_list);
 }
 
@@ -66,7 +157,7 @@ export function stringify_FontSet(
   return [
     font.text ? `set text(font: ${stringify_FontFamilies(font.text)})` : null,
     font.math
-      ? `show math.equation: set text(font: ${stringify_FontFamilies(font.math)})`
+      ? `show math.equation: set text(font: ${stringify_MathFontFamilies(font.math)})`
       : null,
     font.code
       ? `show raw: set text(font: ${stringify_FontFamilies(font.code)})`
