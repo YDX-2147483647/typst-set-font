@@ -12,3 +12,9 @@ export const TYPST_FONT = {
   /** https://docs.rs/typst-library/0.13.1/src/typst_library/text/raw.rs.html#479 */
   code: "DejaVu Sans Mono",
 };
+
+/** List of fonts embedded in typst. */
+export const TYPST_EMBEDDED_FONTS = [
+  ...Object.values(TYPST_FONT),
+  TYPST_FONT.math.replace(/ Math$/, ""),
+];

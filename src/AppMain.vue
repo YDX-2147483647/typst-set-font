@@ -15,7 +15,7 @@ import SeeAlso from "./components/SeeAlso.vue";
 import StringifyTypstCode from "./components/StringifyTypstCode.vue";
 import { common_han_fonts } from "./fixtures.ts";
 import { calc_advanced } from "./fonts/advanced.ts";
-import { TYPST_FONT } from "./fonts/const.ts";
+import { TYPST_EMBEDDED_FONTS, TYPST_FONT } from "./fonts/const.ts";
 import { resolve_FontFamilies, resolve_FontSet } from "./fonts/resolve.ts";
 import {
   FallbackRule,
@@ -32,12 +32,7 @@ const font: FontSetAdvanced = reactive(FontSet_empty());
 /** A sorted list of all used fonts */
 const used_fonts = computed<{ value: string; homepage?: string | undefined }[]>(
   () => {
-    const ignored = [
-      undefined,
-      null,
-      ...Object.values(TYPST_FONT),
-      TYPST_FONT.math.replace(/ Math$/, ""),
-    ];
+    const ignored = [undefined, null, ...TYPST_EMBEDDED_FONTS];
     const known = Object.values(common_han_fonts).flat();
 
     const resolved = resolve_FontSet(font);

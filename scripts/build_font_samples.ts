@@ -1,7 +1,7 @@
-import { common_han_fonts, text_samples } from "../src/fixtures.ts";
-import { TYPST_FONT } from "../src/fonts/const.ts";
-import { writeFile } from "node:fs/promises";
 import assert from "node:assert";
+import { writeFile } from "node:fs/promises";
+import { common_han_fonts, text_samples } from "../src/fixtures.ts";
+import { TYPST_EMBEDDED_FONTS } from "../src/fonts/const.ts";
 import { typst } from "./typst.ts";
 
 const template = `
@@ -42,8 +42,7 @@ async function compile(args: {
 }
 
 const fonts = [
-  ...Object.values(TYPST_FONT),
-  TYPST_FONT.math.replace(/ Math$/, ""),
+  ...TYPST_EMBEDDED_FONTS,
   ...Object.values(common_han_fonts)
     .flat()
     .map(({ value }) => value),
