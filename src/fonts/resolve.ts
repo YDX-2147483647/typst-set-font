@@ -4,6 +4,7 @@
  * Resolve `FontFamilies` into `Resolved<FontFamilies>` as in typst.
  */
 
+import { TYPST_FONT } from "./const.ts";
 import {
   FontFamilies,
   FontSet,
@@ -11,59 +12,55 @@ import {
   MathFontFamilies,
   type Resolved,
 } from "./types.ts";
-import { TYPST_FONT } from "./const.ts";
 
 /**
  * Resolve `FontFamilies` as in typst.
  *
  * @param font
- * @param category Category of the environment, used to determine fallbacks. If `font.math` exists, then `category` should be and is assumed to be `"math"`.
+ * @param category Category of the environment, used to determine fallbacks.
  * @returns Resolved `FontFamilies`, or `null` if no font is set.
  */
 export function resolve_FontFamilies(
-  font: MathFontFamilies,
-  category: keyof FontSet,
-): Resolved<MathFontFamilies> | null;
-
-export function resolve_FontFamilies(
   font: FontFamilies,
-  category: "math",
-): Resolved<MathFontFamilies> | null;
-
-export function resolve_FontFamilies(
-  font: FontFamilies,
-  category: keyof FontSet,
+  category: keyof Omit<FontSet, "math">,
 ): Resolved<FontFamilies> | null {
   const { latin, han, rule } = font;
-  const is_math = ("math" in font && font.math) || category === "math";
+  const resolved_han = han || latin;
 
-  if (!is_math) {
-    if (latin || han) {
-      const resolved_latin = latin || TYPST_FONT[category];
-
-      return {
-        latin: resolved_latin,
-        han: han || latin,
-        rule,
-      } as Resolved<FontFamilies>;
-    } else {
-      return null;
-    }
+  // If either `latin` or `han` is set
+  if (resolved_han) {
+    return {
+      latin: latin || TYPST_FONT[category],
+      han: resolved_han,
+      rule,
+    } satisfies Resolved<FontFamilies>;
   } else {
-    const math = (font as MathFontFamilies).math;
-    if (latin || han || math) {
-      const resolved_latin =
-        latin || math || TYPST_FONT.math.replace(/ Math$/, "");
+    return null;
+  }
+}
 
-      return {
-        latin: resolved_latin,
-        han: han || resolved_latin,
-        math: math || TYPST_FONT.math,
-        rule,
-      } as Resolved<MathFontFamilies>;
-    } else {
-      return null;
-    }
+/**
+ * Resolve `MathFontFamilies` as in typst.
+ *
+ * @param font
+ * @returns Resolved `MathFontFamilies`, or `null` if no font is set.
+ */
+export function resolve_MathFontFamilies(
+  font: MathFontFamilies,
+): Resolved<MathFontFamilies> | null {
+  const { latin, han, math, rule } = font;
+  if (latin || han || math) {
+    const resolved_math = math || TYPST_FONT.math;
+    const resolved_latin = latin || resolved_math;
+
+    return {
+      latin: resolved_latin,
+      han: han || resolved_latin,
+      math: resolved_math,
+      rule,
+    } satisfies Resolved<MathFontFamilies>;
+  } else {
+    return null;
   }
 }
 
@@ -78,7 +75,7 @@ export function resolve_FontSet<T extends FontSet>(
   const { text, math, code, ...others } = font;
   return {
     text: resolve_FontFamilies(text, "text"),
-    math: resolve_FontFamilies(math, "math"),
+    math: resolve_MathFontFamilies(math),
     code: resolve_FontFamilies(code, "code"),
     ...others,
   };

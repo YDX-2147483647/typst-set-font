@@ -15,8 +15,12 @@ import SeeAlso from "./components/SeeAlso.vue";
 import StringifyTypstCode from "./components/StringifyTypstCode.vue";
 import { common_han_fonts } from "./fixtures.ts";
 import { calc_advanced } from "./fonts/advanced.ts";
-import { TYPST_FONT } from "./fonts/const.ts";
-import { resolve_FontFamilies, resolve_FontSet } from "./fonts/resolve.ts";
+import { TYPST_EMBEDDED_FONTS, TYPST_FONT } from "./fonts/const.ts";
+import {
+  resolve_FontFamilies,
+  resolve_FontSet,
+  resolve_MathFontFamilies,
+} from "./fonts/resolve.ts";
 import {
   FallbackRule,
   FontFamilies,
@@ -32,12 +36,7 @@ const font: FontSetAdvanced = reactive(FontSet_empty());
 /** A sorted list of all used fonts */
 const used_fonts = computed<{ value: string; homepage?: string | undefined }[]>(
   () => {
-    const ignored = [
-      undefined,
-      null,
-      ...Object.values(TYPST_FONT),
-      TYPST_FONT.math.replace(/ Math$/, ""),
-    ];
+    const ignored = [undefined, null, ...TYPST_EMBEDDED_FONTS];
     const known = Object.values(common_han_fonts).flat();
 
     const resolved = resolve_FontSet(font);
@@ -80,25 +79,25 @@ function build_validator(
 
 const common_han = ref("");
 
-const config = computed<
-  Record<
-    keyof FontSet,
+type FontConfig<T extends FontFamilies | MathFontFamilies> = {
+  label: string;
+  description?: Markdown;
+  data: Record<
+    keyof Omit<T, "rule">,
     {
       label: string;
-      description?: Markdown;
-      data: Record<
-        keyof Omit<FontFamilies, "rule">,
-        {
-          label: string;
-          validate?: ReturnType<typeof build_validator>;
-        } & (
-          | { placeholder?: string } // text input
-          | { options?: { label: string; key: string | number }[] } // radio
-          | { type: "check"; advanced: true } // checkbox
-        )
-      >;
-    }
-  >
+      validate?: ReturnType<typeof build_validator>;
+    } & (
+      | { placeholder?: string } // text input
+      | { options?: { label: string; key: string | number }[] } // radio
+      | { type: "check"; advanced: true } // checkbox
+    )
+  >;
+};
+const config = computed<
+  Record<keyof Omit<FontSet, "math">, FontConfig<FontFamilies>> & {
+    math: FontConfig<MathFontFamilies>;
+  }
 >(() => ({
   text: {
     label: "正文",
@@ -259,14 +258,14 @@ const config = computed<
   math: {
     label: "数学",
     description:
-      '数学指 [math.equation](https://typst.app/docs/reference/math/equation/)。以下“数学排版”指其中变量、分式、积分号等，而“中文”“Latin”指其中用 "" 包裹起来的文本。',
+      '数学指 [math.equation](https://typst.app/docs/reference/math/equation/)。<br>“数学排版”字体负责大部分变量，以及分式、积分号、上下标等；Latin 和中文字体负责 "…" 和 #[…] 中的文本。此外，upright(…) 正体变量在未叠加 bold(…) 时也由 Latin 字体负责。',
     data: {
       math: {
         label: "数学排版",
         placeholder: `留空表示默认，即 ${TYPST_FONT.math}`,
 
         validate: build_validator(() => {
-          const f = resolve_FontFamilies(font.math, "math");
+          const f = resolve_MathFontFamilies(font.math);
           if (f === null) {
             return { status: "success" };
           }
@@ -287,28 +286,11 @@ const config = computed<
         placeholder: "留空表示使用数学排版字体",
 
         validate: build_validator(() => {
-          const f = resolve_FontFamilies(font.math, "math");
+          const f = resolve_MathFontFamilies(font.math);
           if (f === null) {
             return { status: "success" };
           }
 
-          if (f.latin === f.math && f.latin !== f.han) {
-            return {
-              status: "warning",
-              feedback:
-                "可能遇到 [typst#6566](https://github.com/typst/typst/issues/6566)，建议数学排版字体加“Math”后缀，而 Latin 字体不加",
-            };
-          }
-          if (
-            f.latin !== f.math &&
-            f.latin.toLocaleLowerCase().includes(" Math".toLocaleLowerCase())
-          ) {
-            return {
-              status: "warning",
-              feedback:
-                "选用数学字体用于文本，可能[一同替换数学排版的字体](https://forum.typst.app/t/what-is-the-designed-behaviour-of-font-covers-in-math-equations/5006)，建议删除“Math”后缀或换成“Sans”或“Serif”",
-            };
-          }
           if (f.latin !== f.math) {
             const math = f.math.toLocaleLowerCase().replace(/\s+math$/, "");
             const latin = f.latin
@@ -319,7 +301,7 @@ const config = computed<
               return {
                 status: "success",
                 feedback:
-                  'Latin 与数学排版字体不配套，"" 内外的字母未必协调，请酌情使用；[预计下一版 Typst 会改进](https://github.com/typst/typst/pull/6365)',
+                  "Latin 与数学排版字体不配套，upright(…) 内外的字母未必协调，请酌情使用",
               };
             }
           }
@@ -329,6 +311,25 @@ const config = computed<
       han: {
         label: "中文字体",
         placeholder: "留空表示不设置，通常回落到楷体，也可能随机或豆腐块",
+
+        validate: build_validator(() => {
+          const f = resolve_MathFontFamilies(font.math);
+          if (f === null) {
+            return { status: "success" };
+          }
+
+          if (
+            f.latin !== f.han &&
+            f.han.toLocaleLowerCase().includes(" Math".toLocaleLowerCase())
+          ) {
+            return {
+              status: "warning",
+              feedback:
+                "名称含“Math”的通常是数学排版字体，一般不支持中文，填错了？",
+            };
+          }
+          return { status: "success" };
+        }),
       },
       rule: {
         label: "中西共用标点",
@@ -336,6 +337,10 @@ const config = computed<
           {
             label: "中文字体",
             key: FallbackRule.HanFirst,
+          },
+          {
+            label: "数学字体",
+            key: FallbackRule.MathFirst,
           },
           {
             label: "Latin 字体",
@@ -347,23 +352,47 @@ const config = computed<
           },
         ],
         validate: build_validator(() => {
-          const f = resolve_FontFamilies(font.math, "math");
-          if (f === null || f.han === f.latin) {
-            return { status: "irrelevant", feedback: "中西字体统一，无需设置" };
+          const f = resolve_MathFontFamilies(font.math);
+          if (f === null || (f.han === f.latin && f.han === f.math)) {
+            return { status: "irrelevant", feedback: "三种字体统一，无需设置" };
           }
-          switch (f.rule) {
-            case FallbackRule.HanFirst:
-              return { status: "success" };
-            case FallbackRule.LatinFirst:
-              return { status: "success" };
 
-            case FallbackRule.HanOnlyIdeographs:
-              return {
-                status: "warning",
-                feedback:
-                  "可能导致逗号、括号等中文独占标点变成□，建议改选“Latin 字体”",
-              };
+          if (f.rule === FallbackRule.HanOnlyIdeographs) {
+            return {
+              status: "warning",
+              feedback:
+                "可能导致逗号、括号等中文独占标点变成□，建议改选“中文字体”",
+            };
           }
+
+          if (f.math === f.han) {
+            return {
+              status: "irrelevant",
+              feedback:
+                "目前中文采用数学排版字体，请先单独设置中文字体，再考虑此项",
+            };
+          }
+
+          if (
+            f.han === f.latin &&
+            [FallbackRule.HanFirst, FallbackRule.LatinFirst].includes(f.rule)
+          ) {
+            return {
+              status: "success",
+              feedback: "此时选“中文字体”与“Latin 字体”效果相同，因为二者一致",
+            };
+          }
+          if (
+            f.math === f.latin &&
+            [FallbackRule.MathFirst, FallbackRule.LatinFirst].includes(f.rule)
+          ) {
+            return {
+              status: "success",
+              feedback: "此时选“数学字体”与“Latin 字体”效果相同，因为二者一致",
+            };
+          }
+
+          return { status: "success" };
         }),
       },
     },
@@ -377,7 +406,7 @@ const sample_category = ref<keyof FontSet>("text");
   <main>
     <div class="prose dark:prose-invert">
       <h1 class="px-4 lg:pr-0 lg:pl-8">
-        Typst<sup class="align-super text-sm">0.13.1</sup> set font
+        Typst<sup class="align-super text-sm">0.14.0</sup> set font
       </h1>
     </div>
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
@@ -571,8 +600,12 @@ const sample_category = ref<keyof FontSet>("text");
               />
             </n-radio-group>
             <FontFamiliesSample
-              :font="font[sample_category]"
-              :category="sample_category"
+              :="
+                // TypeScript can't infer the merged type automatically
+                sample_category === 'math'
+                  ? { font: font.math, category: sample_category }
+                  : { font: font[sample_category], category: sample_category }
+              "
             />
             <p>浏览器渲染效果可能与 Typst 不同；请以文字描述为准。</p>
           </section>
@@ -592,7 +625,7 @@ const sample_category = ref<keyof FontSet>("text");
                   <span v-else>{{ value }}</span>
                 </li>
               </ul>
-              <p>（未含 Typst 内置字体）</p>
+              <p>（Typst 内置字体无需专门安装，已在清单中省略。）</p>
             </details>
           </section>
         </div>

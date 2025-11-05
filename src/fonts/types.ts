@@ -12,7 +12,7 @@ export type FontName = string;
  */
 export enum FallbackRule {
   /**
-   * Use the latin font for shared punctuations.
+   * Use the Latin font for shared punctuations.
    *
    * Example: `("Arial", "SimSun")` in typst.
    * */
@@ -24,8 +24,15 @@ export enum FallbackRule {
    */
   HanFirst,
   /**
+   * Use the math font for shared punctuations.
+   *
+   * Example: `("New Computer Modern", "Noto Serif CJK SC")` in typst.
+   */
+  MathFirst,
+  /**
    * The text mainly consists of Latin paragraphs, interspersed with some Chinese ideograph.
-   * Therefore, shared punctuations should be rendered in the Latin font,
+   * Therefore, shared punctuations should be rendered in the Latin font
+   * (or the math font in math equations),
    * and the result of other Han punctuations does not matter.
    *
    * Nevertheless, this rule may cause punctuation marks to become tofus,
@@ -37,9 +44,15 @@ export enum FallbackRule {
    */
   HanOnlyIdeographs,
 }
+export type NonMathFallbackRule = Exclude<FallbackRule, FallbackRule.MathFirst>;
 const FallbackRule_default = FallbackRule.HanFirst;
 
-/** Convert from `{ foo?: U | null }` to `{ foo: U }`. */
+/**
+ * Convert from `{ foo?: U | null }` to `{ foo: U }`.
+ *
+ * Compared with `Required<T>` in the canonical TypeScript, `Resolved<T>` also eliminates the possibility of `null`.
+ * In the above example, `Required<T>` is `{ foo: U | null }`.
+ */
 export type Resolved<T> = { [P in keyof Required<T>]: NonNullable<T[P]> };
 
 /**
@@ -55,11 +68,16 @@ export interface FontFamilies {
   /** Han characters */
   han?: FontName | null;
   /** Fallback rule, only relevant when the Latin and Han fonts are different and the Han font is set explicitly. */
-  rule: FallbackRule;
+  rule: NonMathFallbackRule;
 }
-export interface MathFontFamilies extends FontFamilies {
+export interface MathFontFamilies {
+  /** Latin alphabet */
+  latin?: FontName | null;
+  /** Han characters */
+  han?: FontName | null;
   /** A font with OpenType math features */
   math?: FontName | null;
+  rule: FallbackRule;
 }
 
 export function FontFamilies_empty(): Required<FontFamilies> {
