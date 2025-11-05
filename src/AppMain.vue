@@ -621,7 +621,7 @@ const sample_category = ref<keyof FontSet>("text");
                   <span v-else>{{ value }}</span>
                 </li>
               </ul>
-              <p>（未含 Typst 内置字体）</p>
+              <p>（Typst 内置字体无需专门安装，已在清单中省略。）</p>
             </details>
           </section>
         </div>
