@@ -600,8 +600,12 @@ const sample_category = ref<keyof FontSet>("text");
               />
             </n-radio-group>
             <FontFamiliesSample
-              :font="font[sample_category]"
-              :category="sample_category"
+              :="
+                // TypeScript can't infer the merged type automatically
+                sample_category === 'math'
+                  ? { font: font.math, category: sample_category }
+                  : { font: font[sample_category], category: sample_category }
+              "
             />
             <p>浏览器渲染效果可能与 Typst 不同；请以文字描述为准。</p>
           </section>
