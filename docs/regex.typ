@@ -1,4 +1,4 @@
-#pdf.embed(
+#pdf.attach(
   "regex.typ",
   relationship: "source",
 )
