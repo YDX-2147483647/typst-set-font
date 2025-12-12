@@ -1,4 +1,4 @@
-#pdf.embed("coverage.typ", relationship: "source")
+#pdf.attach("coverage.typ", relationship: "source")
 
 // https://myriad-dreamin.github.io/tinymist/feature/preview.html#label-sys.inputs
 #let theme = sys.inputs.at("theme", default: "light")

@@ -35,7 +35,7 @@ jobs:
       - run: pnpm install
       - uses: typst-community/setup-typst@v4
         with:
-          typst-version: v0.14.0
+          typst-version: v0.14.1
 
       - name: Restore cached fonts
         uses: actions/cache@v4
