@@ -406,7 +406,7 @@ const sample_category = ref<keyof FontSet>("text");
   <main>
     <div class="prose dark:prose-invert">
       <h1 class="px-4 lg:pr-0 lg:pl-8">
-        Typst<sup class="align-super text-sm">0.14.1</sup> set font
+        Typst<sup class="align-super text-sm">0.14.2</sup> set font
       </h1>
     </div>
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8">
