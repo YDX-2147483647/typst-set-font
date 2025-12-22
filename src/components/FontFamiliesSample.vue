@@ -86,8 +86,14 @@ const get_image = computed(
     </p>
     <FontSample
       :font="calc_font.both"
-      :text="text_samples.both"
-      :svg="get_image(calc_font.both)?.both"
+      :text="
+        category !== 'math' ? text_samples.both : text_samples.both_for_math
+      "
+      :svg="
+        category !== 'math'
+          ? get_image(calc_font.both)?.both
+          : get_image(calc_font.both)?.both_for_math
+      "
     />
     <p class="row-span-2">中文独占</p>
     <p>标点：</p>

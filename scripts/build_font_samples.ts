@@ -64,6 +64,7 @@ const samples = Object.fromEntries(
         const images = {
           latin: await cc(t.latin),
           both: await cc(t.both),
+          both_for_math: await cc(t.both_for_math),
           han: { punct: await cc(t.han.punct), ideo: await cc(t.han.ideo) },
         };
         console.log(`✅ Compiled ${font}.`);

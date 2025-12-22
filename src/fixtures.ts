@@ -6,6 +6,8 @@ export const text_samples = {
   latin: "Aa09,.?!",
   /** Characters shared between Latin and Han */
   both: "—…“”‘’·",
+  /** Characters shared between Latin and Han, excluding those used by math */
+  both_for_math: "—“”‘’",
   /** Characters dedicated for Han */
   han: {
     /** Punctuations */
