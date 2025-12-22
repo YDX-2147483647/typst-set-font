@@ -162,7 +162,7 @@ describe("stringify_MathFontFamilies", () => {
       };
       const result = stringify_MathFontFamilies(font);
       expect(result).toBe(
-        '((name: "Times New Roman", covers: regex("[.\\d\\p{Latin}]")), (name: "SimSun", covers: regex("[·–—‘’“”‥…‧⸺]")), "TeX Gyre Termes Math", "SimSun")',
+        '((name: "Times New Roman", covers: regex("[.\\d\\p{Latin}]")), (name: "SimSun", covers: regex("[–—‘’“”‥‧⸺]")), "TeX Gyre Termes Math", "SimSun")',
       );
     });
 
@@ -181,7 +181,7 @@ describe("stringify_MathFontFamilies", () => {
       } as const;
       const result = stringify_MathFontFamilies(font);
       expect(result).toBe(
-        '((name: "Fira Math", covers: "latin-in-cjk"), (name: "KaiTi", covers: regex(".")), "Fira Math")',
+        '((name: "KaiTi", covers: regex("[–—‘’“”‥‧⸺]")), "Fira Math", "KaiTi")',
       );
     });
 
@@ -194,7 +194,7 @@ describe("stringify_MathFontFamilies", () => {
       } as const;
       const result = stringify_MathFontFamilies(font);
       expect(result).toBe(
-        '((name: "Noto Serif CJK SC", covers: regex("[.\\d\\p{Latin}·–—‘’“”‥…‧⸺]")), "Fira Math", "Noto Serif CJK SC")',
+        '((name: "Noto Serif CJK SC", covers: regex("[.\\d\\p{Latin}–—‘’“”‥‧⸺]")), "Fira Math", "Noto Serif CJK SC")',
       );
     });
 
@@ -261,7 +261,7 @@ describe("stringify_MathFontFamilies", () => {
       } as const;
       const result = stringify_MathFontFamilies(font);
       expect(result).toBe(
-        '((name: "Source Han Sans", covers: regex("[.\\d\\p{Latin}·–—‘’“”‥…‧⸺]")), "DejaVu Math", "Source Han Sans")',
+        '((name: "Source Han Sans", covers: regex("[.\\d\\p{Latin}–—‘’“”‥‧⸺]")), "DejaVu Math", "Source Han Sans")',
       );
     });
 
@@ -274,7 +274,7 @@ describe("stringify_MathFontFamilies", () => {
       } as const;
       const result = stringify_MathFontFamilies(font);
       expect(result).toBe(
-        '((name: "Helvetica", covers: regex("[.\\d\\p{Latin}·–—‘’“”‥…‧⸺]")), "奢望", "Helvetica")',
+        '((name: "Helvetica", covers: regex("[.\\d\\p{Latin}–—‘’“”‥‧⸺]")), "奢望", "Helvetica")',
       );
     });
 
@@ -287,7 +287,7 @@ describe("stringify_MathFontFamilies", () => {
       } as const;
       const result = stringify_MathFontFamilies(font);
       expect(result).toBe(
-        '((name: "Times New Roman", covers: regex("[.\\d\\p{Latin}·–—‘’“”‥…‧⸺]")), "TeX Gyre Termes Math", "SimSun")',
+        '((name: "Times New Roman", covers: regex("[.\\d\\p{Latin}–—‘’“”‥‧⸺]")), "TeX Gyre Termes Math", "SimSun")',
       );
     });
   });

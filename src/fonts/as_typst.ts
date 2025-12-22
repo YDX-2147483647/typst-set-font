@@ -53,6 +53,26 @@ export function stringify_FontFamilies(font: Resolved<FontFamilies>): string {
 export function calculate_MathFontFamilies(
   font: Resolved<MathFontFamilies>,
 ): TypstFontList {
+  /**
+   * Punctuation marks shared by Latin and Han.
+   *
+   * Latin-1 Supplement:
+   *   00B7 MIDDLE DOT, excluded because of $dot.c$
+   * General Punctuation:
+   *   2013 EN DASH
+   *   2014 EM DASH
+   *   2018 LEFT SINGLE QUOTATION MARK
+   *   2019 RIGHT SINGLE QUOTATION MARK
+   *   201C LEFT DOUBLE QUOTATION MARK
+   *   201D RIGHT DOUBLE QUOTATION MARK
+   *   2025 TWO DOT LEADER
+   *   2026 HORIZONTAL ELLIPSIS, excluded because of $...$
+   *   2027 HYPHENATION POINT
+   * Supplemental Punctuation:
+   *   2E3A TWO-EM DASH
+   */
+  const shared = "–—‘’“”‥‧⸺";
+
   const { math, han, latin } = font;
   if (math === latin) {
     if (math === han) {
@@ -62,34 +82,15 @@ export function calculate_MathFontFamilies(
       // Case 1.2: math = latin ≠ han
       if (font.rule === FallbackRule.HanFirst) {
         return [
-          { name: math, covers: "latin-in-cjk" },
-          { name: han, covers: typst_code(`regex(".")`) },
+          { name: han, covers: typst_code(`regex("[${shared}]")`) },
           math,
+          han,
         ];
       } else {
         return [math, han];
       }
     }
   } else {
-    /**
-     * Punctuation marks shared by Latin and Han.
-     *
-     * Latin-1 Supplement:
-     *   B7 MIDDLE DOT
-     * General Punctuation:
-     *   2013 EN DASH
-     *   2014 EM DASH
-     *   2018 LEFT SINGLE QUOTATION MARK
-     *   2019 RIGHT SINGLE QUOTATION MARK
-     *   201C LEFT DOUBLE QUOTATION MARK
-     *   201D RIGHT DOUBLE QUOTATION MARK
-     *   2025 TWO DOT LEADER
-     *   2026 HORIZONTAL ELLIPSIS
-     *   2027 HYPHENATION POINT
-     * Supplemental Punctuation:
-     *   2E3A TWO-EM DASH
-     */
-    const shared = "·–—‘’“”‥…‧⸺";
     const regex_latin = typst_code(`regex("[.\\d\\p{Latin}]")`);
     const regex_shared = typst_code(`regex("[${shared}]")`);
     const regex_latin_and_shared = typst_code(
