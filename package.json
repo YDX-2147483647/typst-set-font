@@ -15,7 +15,7 @@
     "@typstyle/typstyle-wasm-bundler": "^0.14.0",
     "marked": "^17.0.1",
     "tailwindcss": "^4.1.18",
-    "vue": "^3.5.25"
+    "vue": "^3.5.26"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
