@@ -13,31 +13,31 @@
   },
   "dependencies": {
     "@typstyle/typstyle-wasm-bundler": "^0.14.4",
-    "marked": "^17.0.3",
-    "tailwindcss": "^4.2.1",
-    "vue": "^3.5.29"
+    "marked": "^17.0.4",
+    "tailwindcss": "^4.2.2",
+    "vue": "^3.5.30"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.3",
+    "@eslint/js": "^9.39.4",
     "@tailwindcss/typography": "^0.5.19",
-    "@tailwindcss/vite": "^4.2.1",
-    "@types/node": "^25.3.3",
-    "@vitejs/plugin-vue": "^6.0.4",
-    "@vitest/coverage-v8": "^4.0.18",
-    "eslint": "^9.39.3",
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^25.5.0",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "@vitest/coverage-v8": "^4.1.0",
+    "eslint": "^9.39.4",
     "eslint-plugin-vue": "^10.8.0",
     "globals": "^17.4.0",
-    "naive-ui": "^2.43.2",
+    "naive-ui": "^2.44.1",
     "postcss-nesting": "^13.0.2",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "rust-just": "^1.46.0",
+    "rust-just": "^1.47.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.1",
+    "typescript-eslint": "^8.57.1",
     "vite": "^7.3.1",
     "vite-plugin-top-level-await": "^1.6.0",
-    "vite-plugin-wasm": "^3.5.0",
-    "vitest": "^4.0.18"
+    "vite-plugin-wasm": "^3.6.0",
+    "vitest": "^4.1.0"
   },
   "prettier": {
     "plugins": [
