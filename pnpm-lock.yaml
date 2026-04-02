@@ -61,8 +61,8 @@ importers:
         specifier: ^0.7.2
         version: 0.7.2(prettier@3.8.1)
       rust-just:
-        specifier: ^1.47.1
-        version: 1.47.1
+        specifier: ^1.48.1
+        version: 1.48.1
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -405,79 +405,66 @@ packages:
     resolution: {integrity: sha512-t4ONHboXi/3E0rT6OZl1pKbl2Vgxf9vJfWgmUoCEVQVxhW6Cw/c8I6hbbu7DAvgp82RKiH7TpLwxnJeKv2pbsw==}
     cpu: [arm]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-arm-musleabihf@4.59.0':
     resolution: {integrity: sha512-CikFT7aYPA2ufMD086cVORBYGHffBo4K8MQ4uPS/ZnY54GKj36i196u8U+aDVT2LX4eSMbyHtyOh7D7Zvk2VvA==}
     cpu: [arm]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-arm64-gnu@4.59.0':
     resolution: {integrity: sha512-jYgUGk5aLd1nUb1CtQ8E+t5JhLc9x5WdBKew9ZgAXg7DBk0ZHErLHdXM24rfX+bKrFe+Xp5YuJo54I5HFjGDAA==}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-arm64-musl@4.59.0':
     resolution: {integrity: sha512-peZRVEdnFWZ5Bh2KeumKG9ty7aCXzzEsHShOZEFiCQlDEepP1dpUl/SrUNXNg13UmZl+gzVDPsiCwnV1uI0RUA==}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-loong64-gnu@4.59.0':
     resolution: {integrity: sha512-gbUSW/97f7+r4gHy3Jlup8zDG190AuodsWnNiXErp9mT90iCy9NKKU0Xwx5k8VlRAIV2uU9CsMnEFg/xXaOfXg==}
     cpu: [loong64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-loong64-musl@4.59.0':
     resolution: {integrity: sha512-yTRONe79E+o0FWFijasoTjtzG9EBedFXJMl888NBEDCDV9I2wGbFFfJQQe63OijbFCUZqxpHz1GzpbtSFikJ4Q==}
     cpu: [loong64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-ppc64-gnu@4.59.0':
     resolution: {integrity: sha512-sw1o3tfyk12k3OEpRddF68a1unZ5VCN7zoTNtSn2KndUE+ea3m3ROOKRCZxEpmT9nsGnogpFP9x6mnLTCaoLkA==}
     cpu: [ppc64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-ppc64-musl@4.59.0':
     resolution: {integrity: sha512-+2kLtQ4xT3AiIxkzFVFXfsmlZiG5FXYW7ZyIIvGA7Bdeuh9Z0aN4hVyXS/G1E9bTP/vqszNIN/pUKCk/BTHsKA==}
     cpu: [ppc64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-riscv64-gnu@4.59.0':
     resolution: {integrity: sha512-NDYMpsXYJJaj+I7UdwIuHHNxXZ/b/N2hR15NyH3m2qAtb/hHPA4g4SuuvrdxetTdndfj9b1WOmy73kcPRoERUg==}
     cpu: [riscv64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-riscv64-musl@4.59.0':
     resolution: {integrity: sha512-nLckB8WOqHIf1bhymk+oHxvM9D3tyPndZH8i8+35p/1YiVoVswPid2yLzgX7ZJP0KQvnkhM4H6QZ5m0LzbyIAg==}
     cpu: [riscv64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-s390x-gnu@4.59.0':
     resolution: {integrity: sha512-oF87Ie3uAIvORFBpwnCvUzdeYUqi2wY6jRFWJAy1qus/udHFYIkplYRW+wo+GRUP4sKzYdmE1Y3+rY5Gc4ZO+w==}
     cpu: [s390x]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-x64-gnu@4.59.0':
     resolution: {integrity: sha512-3AHmtQq/ppNuUspKAlvA8HtLybkDflkMuLK4DPo77DfthRb71V84/c4MlWJXixZz4uruIH4uaa07IqoAkG64fg==}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-x64-musl@4.59.0':
     resolution: {integrity: sha512-2UdiwS/9cTAx7qIUZB/fWtToJwvt0Vbo0zmnYt7ED35KPg13Q0ym1g442THLC7VyI6JfYTP4PiSOWyoMdV2/xg==}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-openbsd-x64@4.59.0':
     resolution: {integrity: sha512-M3bLRAVk6GOwFlPTIxVBSYKUaqfLrn8l0psKinkCFxl4lQvOSz8ZrKDz2gxcBwHFpci0B6rttydI4IpS4IS/jQ==}
@@ -542,28 +529,24 @@ packages:
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@swc/core-linux-arm64-musl@1.15.18':
     resolution: {integrity: sha512-0a+Lix+FSSHBSBOA0XznCcHo5/1nA6oLLjcnocvzXeqtdjnPb+SvchItHI+lfeiuj1sClYPDvPMLSLyXFaiIKw==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@swc/core-linux-x64-gnu@1.15.18':
     resolution: {integrity: sha512-wG9J8vReUlpaHz4KOD/5UE1AUgirimU4UFT9oZmupUDEofxJKYb1mTA/DrMj0s78bkBiNI+7Fo2EgPuvOJfuAA==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@swc/core-linux-x64-musl@1.15.18':
     resolution: {integrity: sha512-4nwbVvCphKzicwNWRmvD5iBaZj8JYsRGa4xOxJmOyHlMDpsvvJ2OR2cODlvWyGFH6BYL1MfIAK3qph3hp0Az6g==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@swc/core-win32-arm64-msvc@1.15.18':
     resolution: {integrity: sha512-zk0RYO+LjiBCat2RTMHzAWaMky0cra9loH4oRrLKLLNuL+jarxKLFDA8xTZWEkCPLjUTwlRN7d28eDLLMgtUcQ==}
@@ -639,28 +622,24 @@ packages:
     engines: {node: '>= 20'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@tailwindcss/oxide-linux-arm64-musl@4.2.2':
     resolution: {integrity: sha512-oCfG/mS+/+XRlwNjnsNLVwnMWYH7tn/kYPsNPh+JSOMlnt93mYNCKHYzylRhI51X+TbR+ufNhhKKzm6QkqX8ag==}
     engines: {node: '>= 20'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@tailwindcss/oxide-linux-x64-gnu@4.2.2':
     resolution: {integrity: sha512-rTAGAkDgqbXHNp/xW0iugLVmX62wOp2PoE39BTCGKjv3Iocf6AFbRP/wZT/kuCxC9QBh9Pu8XPkv/zCZB2mcMg==}
     engines: {node: '>= 20'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@tailwindcss/oxide-linux-x64-musl@4.2.2':
     resolution: {integrity: sha512-XW3t3qwbIwiSyRCggeO2zxe3KWaEbM0/kW9e8+0XpBgyKU4ATYzcVSMKteZJ1iukJ3HgHBjbg9P5YPRCVUxlnQ==}
     engines: {node: '>= 20'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@tailwindcss/oxide-wasm32-wasi@4.2.2':
     resolution: {integrity: sha512-eKSztKsmEsn1O5lJ4ZAfyn41NfG7vzCg496YiGtMDV86jz1q/irhms5O0VrY6ZwTUkFy/EKG3RfWgxSI3VbZ8Q==}
@@ -1284,28 +1263,24 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   lightningcss-linux-arm64-musl@1.32.0:
     resolution: {integrity: sha512-UpQkoenr4UJEzgVIYpI80lDFvRmPVg6oqboNHfoH4CQIfNA+HOrZ7Mo7KZP02dC6LjghPQJeBsvXhJod/wnIBg==}
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   lightningcss-linux-x64-gnu@1.32.0:
     resolution: {integrity: sha512-V7Qr52IhZmdKPVr+Vtw8o+WLsQJYCTd8loIfpDaMRWGUZfBOYEJeyJIkqGIDMZPwPx24pUMfwSxxI8phr/MbOA==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   lightningcss-linux-x64-musl@1.32.0:
     resolution: {integrity: sha512-bYcLp+Vb0awsiXg/80uCRezCYHNg1/l3mt0gzHnWV9XP1W5sKa5/TCdGWaR/zBM2PeF/HbsQv/j2URNOiVuxWg==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   lightningcss-win32-arm64-msvc@1.32.0:
     resolution: {integrity: sha512-8SbC8BR40pS6baCM8sbtYDSwEVQd4JlFTOlaD3gWGHfThTcABnNDBda6eTZeqbofalIJhFx0qKzgHJmcPTnGdw==}
@@ -1526,43 +1501,43 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  rust-just-darwin-arm64@1.47.1:
-    resolution: {integrity: sha512-DtkiupdCCxLEPRYJAQxQieAmImBVn1KjRi05QFdYayZRAcAosbcFDo6P2q3cgrGBnlKNtTXEu3hbhY6+1ZrrjQ==}
+  rust-just-darwin-arm64@1.48.1:
+    resolution: {integrity: sha512-K3+coxjtziP1mG1L3i8PgXK3wkwSQ6ODHhY1gmUqQLXWNbZCC6ZXMN7yj5urrvgAyE2inSe1PaKNSsawtiFsGQ==}
     cpu: [arm64]
     os: [darwin]
 
-  rust-just-darwin-x64@1.47.1:
-    resolution: {integrity: sha512-HHbHS48AU6Lb5/OGkhJY6CvA1xN+pWlTwvdgLfNdOakVWN43iILoU47rYnFZWFkBigvEfS5VJjWkSKrjwzjkiQ==}
+  rust-just-darwin-x64@1.48.1:
+    resolution: {integrity: sha512-Jwq1q2XFUFYZxWp3j8WNZ9HjByk/1KT7x6dKX4dUnBtd/pqMS2ps2SUqGHWxuS+JAbB/qDJvyWoD7uXIK0C6qQ==}
     cpu: [x64]
     os: [darwin]
 
-  rust-just-linux-arm64@1.47.1:
-    resolution: {integrity: sha512-zgjFq+fw7Pg9wGX8Kdff5ZTemXwrjD2O5S1x33lR1wWNjDY1sTe3g59RFRg+fyu5LT5K72dsk7AJ8HnNhpl7hA==}
+  rust-just-linux-arm64@1.48.1:
+    resolution: {integrity: sha512-NvDiyuwyuwO080/NdXGA9iGiwfQLBZfIDjq87WQBkasAQ2xbR2ba7P7mTAxPf4mGOOoY7yapn/pIpv/om6mAnQ==}
     cpu: [arm64]
     os: [linux]
 
-  rust-just-linux-arm@1.47.1:
-    resolution: {integrity: sha512-aHr7K4rsj0qnCJB4RKiiAJKzW/nPxkSyPVX351u2RUILAYN2kaBkW4hdsabF3X99G3AfQVJvNg2cpTtRYdujqA==}
+  rust-just-linux-arm@1.48.1:
+    resolution: {integrity: sha512-zc2YRYI3rSE/rqZ2ruUHZkaS/kgsyg0RnxjquooFVFJWxhVsWcbXYapDUBkfIuh0IFJeJPD7s1ehhPuK/fdB+g==}
     cpu: [arm]
     os: [linux]
 
-  rust-just-linux-x64@1.47.1:
-    resolution: {integrity: sha512-x5h2nKycJsgBWpajWHf6oe8j9tq3ct+4uwurc/bXpFw/+tYO7+BKDqZuHllzHt9QhJIzgZ1AKCqB+0pgCBMJ1g==}
+  rust-just-linux-x64@1.48.1:
+    resolution: {integrity: sha512-ux4D4kRFDlWX0ycpGMw5aALGxUT0FGX0czHw9x7A2oA2L9pJxlLt9f7Nqcv0GqiPRkmubfeAiKBMyfrGkS0EjA==}
     cpu: [x64]
     os: [linux]
 
-  rust-just-windows-arm64@1.47.1:
-    resolution: {integrity: sha512-oXHw14DzGOn5eropTeYTPD470Uml8uw64iSBjW+JtjkvysBBIXaYcrblT1A1DsCIm5UWWoud7TX1etbt6xCK3w==}
+  rust-just-windows-arm64@1.48.1:
+    resolution: {integrity: sha512-OE8RWNfvkQbAhd7CA8bKeMlWdEa+dNs4/eaCb+Bo+KkiQHU2cX3vUIYTsJERJT9WXMSWevZnramY8lktpG6tQw==}
     cpu: [arm64]
     os: [win32]
 
-  rust-just-windows-x64@1.47.1:
-    resolution: {integrity: sha512-4atVlLVkjpYisaEEaFMMTe7uonAI8i+ANBRIBssHSoEPKliSokIVAkgISF/v7I+M+ncClP9kfUJmI7LsFGUbOg==}
+  rust-just-windows-x64@1.48.1:
+    resolution: {integrity: sha512-YN76WkZu+ZpK8yW53uuBbiodE/BXhDgL2CRygengZXR21Rzodbd39f7VUgPI7YCWz52ykQAm0vrMWJ+e5xgqKA==}
     cpu: [x64]
     os: [win32]
 
-  rust-just@1.47.1:
-    resolution: {integrity: sha512-pCb215WZHYUpQZKnRnuMNkogsP9aCSRx+tzV6YAYkBl3qPLl88aXeE3nkNKCrjCPDbX9iSZXR6ERb9x7NiU5+Q==}
+  rust-just@1.48.1:
+    resolution: {integrity: sha512-XM+wMzaxc1GqQ4ooT/9hhEhWNmn4phKpOppz1J+yaDe0O6L+heT+uYneahtlFKe9OvXrpN9PwVmjmkz80LKvdA==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -3077,39 +3052,39 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.59.0
       fsevents: 2.3.3
 
-  rust-just-darwin-arm64@1.47.1:
+  rust-just-darwin-arm64@1.48.1:
     optional: true
 
-  rust-just-darwin-x64@1.47.1:
+  rust-just-darwin-x64@1.48.1:
     optional: true
 
-  rust-just-linux-arm64@1.47.1:
+  rust-just-linux-arm64@1.48.1:
     optional: true
 
-  rust-just-linux-arm@1.47.1:
+  rust-just-linux-arm@1.48.1:
     optional: true
 
-  rust-just-linux-x64@1.47.1:
+  rust-just-linux-x64@1.48.1:
     optional: true
 
-  rust-just-windows-arm64@1.47.1:
+  rust-just-windows-arm64@1.48.1:
     optional: true
 
-  rust-just-windows-x64@1.47.1:
+  rust-just-windows-x64@1.48.1:
     optional: true
 
-  rust-just@1.47.1:
+  rust-just@1.48.1:
     dependencies:
       execa: 9.6.1
       yargs: 18.0.0
     optionalDependencies:
-      rust-just-darwin-arm64: 1.47.1
-      rust-just-darwin-x64: 1.47.1
-      rust-just-linux-arm: 1.47.1
-      rust-just-linux-arm64: 1.47.1
-      rust-just-linux-x64: 1.47.1
-      rust-just-windows-arm64: 1.47.1
-      rust-just-windows-x64: 1.47.1
+      rust-just-darwin-arm64: 1.48.1
+      rust-just-darwin-x64: 1.48.1
+      rust-just-linux-arm: 1.48.1
+      rust-just-linux-arm64: 1.48.1
+      rust-just-linux-x64: 1.48.1
+      rust-just-windows-arm64: 1.48.1
+      rust-just-windows-x64: 1.48.1
 
   seemly@0.3.10: {}
 
