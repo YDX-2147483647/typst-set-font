@@ -12,7 +12,7 @@
     "just": "just"
   },
   "dependencies": {
-    "@typstyle/typstyle-wasm-bundler": "^0.14.4",
+    "@typstyle/typstyle-wasm-bundler": "^0.15.0",
     "marked": "^17.0.5",
     "tailwindcss": "^4.2.2",
     "vue": "^3.5.31"
