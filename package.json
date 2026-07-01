@@ -30,7 +30,7 @@
     "naive-ui": "^2.44.1",
     "postcss-nesting": "^13.0.2",
     "prettier": "^3.8.1",
-    "prettier-plugin-tailwindcss": "^0.7.2",
+    "prettier-plugin-tailwindcss": "^0.8.0",
     "rust-just": "^1.48.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.58.0",
