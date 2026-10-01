@@ -29,13 +29,13 @@ importers:
         version: 0.5.20(tailwindcss@4.3.2)
       '@tailwindcss/vite':
         specifier: ^4.3.2
-        version: 4.3.2(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0))
+        version: 4.3.2(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0))
       '@types/node':
-        specifier: ^26.0.1
-        version: 26.0.1
+        specifier: ^26.6.3
+        version: 26.6.3
       '@vitejs/plugin-vue':
         specifier: ^6.0.7
-        version: 6.0.7(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0))(vue@3.5.39(typescript@6.0.3))
+        version: 6.0.7(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0))(vue@3.5.39(typescript@6.0.3))
       '@vitest/coverage-v8':
         specifier: ^4.1.9
         version: 4.1.9(vitest@4.1.11)
@@ -71,16 +71,16 @@ importers:
         version: 8.62.1(eslint@10.6.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
       vite:
         specifier: ^8.0.16
-        version: 8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0)
+        version: 8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0)
       vite-plugin-top-level-await:
         specifier: ^1.6.0
-        version: 1.6.0(rollup@4.59.0)(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0))
+        version: 1.6.0(rollup@4.59.0)(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0))
       vite-plugin-wasm:
         specifier: ^3.6.0
-        version: 3.6.0(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0))
+        version: 3.6.0(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0))
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.0.1)(@vitest/coverage-v8@4.1.9)(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0))
+        version: 4.1.11(@types/node@26.6.3)(@vitest/coverage-v8@4.1.9)(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0))
 
 packages:
 
@@ -853,8 +853,8 @@ packages:
   '@types/lodash@4.17.24':
     resolution: {integrity: sha512-gIW7lQLZbue7lRSWEFql49QJJWThrTFFeIMJdp3eH4tKoxm1OvEPg02rm4wCCSHS0cL3/Fizimb35b7k8atwsQ==}
 
-  '@types/node@26.0.1':
-    resolution: {integrity: sha512-fc3KiUoBt6kie0N9bIW3E47vZsuaMf0PM2AaUpLCLT0s/LvX1nxAim6Fc049cNxODPpGm6qRAuUOB86SkRuPQw==}
+  '@types/node@26.6.3':
+    resolution: {integrity: sha512-dsqMQQoeTLqu9wynDD00q573mNzso3IdQOAfHRJqLCcmCFPoGo9A1bDpUcv/9tnKpErQWv9uKeGfl37EIS02Yg==}
 
   '@typescript-eslint/eslint-plugin@8.62.1':
     resolution: {integrity: sha512-4EQM77WgVNxj7OkL/5b/D/xZsw00G577+UriYTC7JF5opcF3T2AuoeY7ueLaZgSVjSgCS6yOAJB5bRGLPSJUzA==}
@@ -1878,8 +1878,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  undici-types@8.3.0:
-    resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
+  undici-types@8.9.0:
+    resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
 
   unicorn-magic@0.3.0:
     resolution: {integrity: sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==}
@@ -2543,12 +2543,12 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 4.3.2
 
-  '@tailwindcss/vite@4.3.2(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0))':
+  '@tailwindcss/vite@4.3.2(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0))':
     dependencies:
       '@tailwindcss/node': 4.3.2
       '@tailwindcss/oxide': 4.3.2
       tailwindcss: 4.3.2
-      vite: 8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0)
 
   '@tybys/wasm-util@0.10.2':
     dependencies:
@@ -2577,9 +2577,9 @@ snapshots:
 
   '@types/lodash@4.17.24': {}
 
-  '@types/node@26.0.1':
+  '@types/node@26.6.3':
     dependencies:
-      undici-types: 8.3.0
+      undici-types: 8.9.0
 
   '@typescript-eslint/eslint-plugin@8.62.1(@typescript-eslint/parser@8.62.1(eslint@10.6.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3))(eslint@10.6.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)':
     dependencies:
@@ -2674,10 +2674,10 @@ snapshots:
 
   '@typstyle/typstyle-wasm-bundler@0.15.0': {}
 
-  '@vitejs/plugin-vue@6.0.7(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0))(vue@3.5.39(typescript@6.0.3))':
+  '@vitejs/plugin-vue@6.0.7(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0))(vue@3.5.39(typescript@6.0.3))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0)
       vue: 3.5.39(typescript@6.0.3)
 
   '@vitest/coverage-v8@4.1.9(vitest@4.1.11)':
@@ -2692,7 +2692,7 @@ snapshots:
       obug: 2.1.3
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.11(@types/node@26.0.1)(@vitest/coverage-v8@4.1.9)(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0))
+      vitest: 4.1.11(@types/node@26.6.3)(@vitest/coverage-v8@4.1.9)(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0))
 
   '@vitest/expect@4.1.11':
     dependencies:
@@ -2703,13 +2703,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.1
 
-  '@vitest/mocker@4.1.11(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0))':
+  '@vitest/mocker@4.1.11(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0))':
     dependencies:
       '@vitest/spy': 4.1.11
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0)
 
   '@vitest/pretty-format@4.1.11':
     dependencies:
@@ -3602,7 +3602,7 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  undici-types@8.3.0: {}
+  undici-types@8.9.0: {}
 
   unicorn-magic@0.3.0: {}
 
@@ -3619,22 +3619,22 @@ snapshots:
       evtd: 0.2.4
       vue: 3.5.39(typescript@6.0.3)
 
-  vite-plugin-top-level-await@1.6.0(rollup@4.59.0)(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0)):
+  vite-plugin-top-level-await@1.6.0(rollup@4.59.0)(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0)):
     dependencies:
       '@rollup/plugin-virtual': 3.0.2(rollup@4.59.0)
       '@swc/core': 1.15.18
       '@swc/wasm': 1.15.18
       uuid: 10.0.0
-      vite: 8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0)
     transitivePeerDependencies:
       - '@swc/helpers'
       - rollup
 
-  vite-plugin-wasm@3.6.0(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0)):
+  vite-plugin-wasm@3.6.0(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0)):
     dependencies:
-      vite: 8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0)
 
-  vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0):
+  vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
@@ -3642,15 +3642,15 @@ snapshots:
       rolldown: 1.0.3
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 26.0.1
+      '@types/node': 26.6.3
       esbuild: 0.27.4
       fsevents: 2.3.3
       jiti: 2.7.0
 
-  vitest@4.1.11(@types/node@26.0.1)(@vitest/coverage-v8@4.1.9)(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0)):
+  vitest@4.1.11(@types/node@26.6.3)(@vitest/coverage-v8@4.1.9)(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0)):
     dependencies:
       '@vitest/expect': 4.1.11
-      '@vitest/mocker': 4.1.11(vite@8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0))
+      '@vitest/mocker': 4.1.11(vite@8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0))
       '@vitest/pretty-format': 4.1.11
       '@vitest/runner': 4.1.11
       '@vitest/snapshot': 4.1.11
@@ -3667,10 +3667,10 @@ snapshots:
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.1
-      vite: 8.0.16(@types/node@26.0.1)(esbuild@0.27.4)(jiti@2.7.0)
+      vite: 8.0.16(@types/node@26.6.3)(esbuild@0.27.4)(jiti@2.7.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 26.0.1
+      '@types/node': 26.6.3
       '@vitest/coverage-v8': 4.1.9(vitest@4.1.11)
     transitivePeerDependencies:
       - msw
